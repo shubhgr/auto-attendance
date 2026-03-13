@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance History</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f4f4f7;
+      --surface: #ffffff;
+      --surface2: #f9f9fb;
+      --border: #e8e8ed;
+      --text: #0f0f11;
+      --text2: #6b7280;
+      --text3: #a0a0ab;
+      --in: #16a34a;
+      --in-bg: #f0fdf4;
+      --in-border: #86efac;
+      --out: #dc2626;
+      --out-bg: #fff1f1;
+      --out-border: #fca5a5;
+      --accent: #6366f1;
+      --accent-bg: #eef2ff;
+      --today: #0f0f11;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+      color: var(--text);
+    }
+
+    /* ── Header ── */
+    .header {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .header-left h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+    .header-left p {
+      font-size: 13px;
+      color: var(--text2);
+      margin-top: 3px;
+    }
+
+    /* ── Month nav ── */
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 5px 8px;
+      box-shadow: var(--shadow);
+    }
+    .month-nav button {
+      background: none;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .month-nav button:hover { background: var(--bg); color: var(--text); }
+    .month-nav .month-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      min-width: 130px;
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Stats row ── */
+    .stats {
+      max-width: 900px;
+      margin: 0 auto 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .stat-value.green { color: var(--in); }
+    .stat-value.red   { color: var(--out); }
+
+    /* ── Calendar card ── */
+    .cal-card {
+      max-width: 900px;
+      margin: 0 auto 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .cal-head {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .cal-head-cell {
+      text-align: center;
+      padding: 10px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+    .cal-cell {
+      min-height: 88px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 6px 6px;
+      cursor: default;
+      position: relative;
+      transition: background 0.12s;
+    }
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell.other-month { background: var(--surface2); }
+    .cal-cell.other-month .day-num { color: var(--text3); }
+    .cal-cell.today { background: #fafafa; }
+    .cal-cell.today .day-num {
+      background: var(--today);
+      color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .cal-cell.has-data { cursor: pointer; }
+    .cal-cell.has-data:hover { background: var(--accent-bg); }
+    .day-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 6px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cell-events { display: flex; flex-direction: column; gap: 3px; }
+    .cell-pill {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cell-pill.in  { background: var(--in-bg);  color: var(--in);  border: 1px solid var(--in-border);  }
+    .cell-pill.out { background: var(--out-bg); color: var(--out); border: 1px solid var(--out-border); }
+    .cell-pill-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; background: currentColor; }
+    .cell-more { font-size: 10px; color: var(--text3); font-weight: 600; padding-left: 2px; }
+
+    /* ── Detail panel ── */
+    .detail-panel {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: none;
+    }
+    .detail-panel.visible { display: block; }
+    .detail-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
+    }
+    .detail-date { font-size: 14px; font-weight: 700; color: var(--text); }
+    .detail-count {
+      font-size: 12px; color: var(--text2);
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 99px; padding: 2px 10px; font-weight: 600;
+    }
+    .detail-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--text3); font-size: 18px; line-height: 1;
+      width: 28px; height: 28px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.12s, color 0.12s;
+    }
+    .detail-close:hover { background: var(--bg); color: var(--text); }
+    .detail-list { list-style: none; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .detail-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: 10px; border: 1px solid transparent;
+    }
+    .detail-item.in  { background: var(--in-bg);  border-color: var(--in-border);  }
+    .detail-item.out { background: var(--out-bg); border-color: var(--out-border); }
+    .detail-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .detail-item.in  .detail-icon { background: #dcfce7; }
+    .detail-item.out .detail-icon { background: #fee2e2; }
+    .detail-info { flex: 1; }
+    .detail-type { font-size: 13px; font-weight: 700; }
+    .detail-item.in  .detail-type { color: var(--in);  }
+    .detail-item.out .detail-type { color: var(--out); }
+    .detail-time { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .detail-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; }
+    .detail-item.in  .detail-badge { background: #16a34a22; color: var(--in);  }
+    .detail-item.out .detail-badge { background: #dc262622; color: var(--out); }
+
+    /* ── Loading / Error ── */
+    .loading {
+      max-width: 900px;
+      margin: 60px auto;
+      text-align: center;
+      color: var(--text3);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* ── Error box ── */
+    .error-box {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff1f1;
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: none;
+    }
+    .error-box h3 { font-size: 15px; color: #dc2626; font-weight: 700; margin-bottom: 8px; }
+    .error-box p  { font-size: 13px; color: #6b7280; line-height: 1.6; }
+    .error-box code {
+      display: block;
+      margin-top: 12px;
+      background: #fee2e2;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #991b1b;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .error-box .retry-btn {
+      margin-top: 16px;
+      background: #0f0f11;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .error-box .retry-btn:hover { opacity: 0.85; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      max-width: 900px;
+      margin: 40px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 28px;
+      text-align: center;
+      display: none;
+    }
+    .empty-state p { font-size: 14px; color: var(--text2); margin-top: 8px; }
+
+    /* Legend */
+    .legend { display: flex; gap: 14px; align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text2); font-weight: 500; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .animate-in { animation: fadeIn 0.3s ease both; }
+
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .cal-cell { min-height: 60px; }
+      .cell-pill span.pill-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading" class="loading">
+  <div class="spinner"></div>
+  <span>Loading attendance data…</span>
+</div>
+
+<!-- Error box -->
+<div id="errorBox" class="error-box">
+  <h3>⚠️ Could not load attendance data</h3>
+  <p id="errorMsg">Something went wrong connecting to Supabase.</p>
+  <code id="errorDetail"></code>
+  <button class="retry-btn" onclick="loadData()">↺ Retry</button>
+</div>
+
+<!-- Empty state -->
+<div id="emptyState" class="empty-state">
+  <div style="font-size:36px">📭</div>
+  <p>No attendance records found in the database.</p>
+</div>
+
+<!-- Main app -->
+<div id="app" style="display:none">
+  <div class="header">
+    <div class="header-left">
+      <h1>Attendance History</h1>
+      <p>Your office check-in &amp; check-out log</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--in)"></div> Check In</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--out)"></div> Check Out</div>
+      </div>
+      <div class="month-nav">
+        <button id="prevMonth" title="Previous month">&#8249;</button>
+        <span class="month-label" id="monthLabel"></span>
+        <button id="nextMonth" title="Next month">&#8250;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats animate-in">
+    <div class="stat-card">
+      <div class="stat-label">Days Present</div>
+      <div class="stat-value" id="stat-days">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Check-ins</div>
+      <div class="stat-value green" id="stat-in">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Check-outs</div>
+      <div class="stat-value red" id="stat-out">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Events</div>
+      <div class="stat-value" id="stat-total">—</div>
+    </div>
+  </div>
+
+  <div class="cal-card animate-in" id="calCard">
+    <div class="cal-head">
+      <div class="cal-head-cell">Sun</div>
+      <div class="cal-head-cell">Mon</div>
+      <div class="cal-head-cell">Tue</div>
+      <div class="cal-head-cell">Wed</div>
+      <div class="cal-head-cell">Thu</div>
+      <div class="cal-head-cell">Fri</div>
+      <div class="cal-head-cell">Sat</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div class="detail-panel animate-in" id="detailPanel">
+    <div class="detail-header">
+      <div class="detail-date" id="detailDate"></div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="detail-count" id="detailCount"></span>
+        <button class="detail-close" id="detailClose">✕</button>
+      </div>
+    </div>
+    <ul class="detail-list" id="detailList"></ul>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG — update these if your table/column names differ ───
+const SUPABASE_URL = "https://kpansofmofolnnfnwlml.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYW5zb2Ztb2ZvbG5uZm53bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzU3ODksImV4cCI6MjA4ODExMTc4OX0.v_TSJONVfpvxuGQnK6O2S9ZXEpRNdfeOvXELeN_yYW0";
+const TABLE       = "office_logs";
+const TIME_COL    = "event_time";
+const TYPE_COL    = "event_type";
+// ──────────────────────────────────────────────────────────────
+
+const MONTHS = ["January","February","March","April","May","June",
+                "July","August","September","October","November","December"];
+
+let allLogs  = [];
+let viewYear, viewMonth;
+
+// ── Show / hide helpers ────────────────────────────────────────
+function show(id)        { document.getElementById(id).style.display = ""; }
+function hide(id)        { document.getElementById(id).style.display = "none"; }
+function showBlock(id)   { document.getElementById(id).style.display = "block"; }
+
+function showError(msg, detail) {
+  hide("loading");
+  hide("app");
+  hide("emptyState");
+  document.getElementById("errorMsg").textContent    = msg;
+  document.getElementById("errorDetail").textContent = detail || "";
+  document.getElementById("errorDetail").style.display = detail ? "block" : "none";
+  showBlock("errorBox");
+}
+
+// ── Fetch ──────────────────────────────────────────────────────
+async function loadData() {
+  // Reset
+  hide("errorBox");
+  hide("app");
+  hide("emptyState");
+  showBlock("loading");
+
+  const url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=${TIME_COL}.desc&limit=5000`;
+
+  let response;
+  try {
+    response = await fetch(url, {
+      headers: {
+        "apikey":        SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type":  "application/json",
+      }
+    });
+  } catch (networkErr) {
+    showError(
+      "Network error — could not reach Supabase. Check your internet connection or if the Supabase URL is correct.",
+      networkErr.message
+    );
+    return;
+  }
+
+  // Non-OK HTTP status
+  if (!response.ok) {
+    let body = "";
+    try { body = await response.text(); } catch(_) {}
+    showError(
+      `Supabase returned HTTP ${response.status} ${response.statusText}. This usually means the table name is wrong, RLS is blocking access, or the API key is invalid.`,
+      body.slice(0, 400)
+    );
+    return;
+  }
+
+  // Parse JSON
+  let data;
+  try {
+    data = await response.json();
+  } catch (parseErr) {
+    showError("Got a response but couldn't parse it as JSON.", parseErr.message);
+    return;
+  }
+
+  // Must be an array
+  if (!Array.isArray(data)) {
+    showError(
+      "Unexpected response format — expected an array of records.",
+      JSON.stringify(data).slice(0, 400)
+    );
+    return;
+  }
+
+  // Empty database
+  if (data.length === 0) {
+    hide("loading");
+    showBlock("emptyState");
+    return;
+  }
+
+  // Parse logs
+  allLogs = data
+    .map(log => ({
+      ...log,
+      _date: new Date(log[TIME_COL])
+    }))
+    .filter(log => !isNaN(log._date));
+
+  if (allLogs.length === 0) {
+    showError(
+      `Loaded ${data.length} records but none had a valid date in column "${TIME_COL}".`,
+      `Sample record: ${JSON.stringify(data[0])}`
+    );
+    return;
+  }
+
+  // Default to most recent month
+  const latest = allLogs[0]._date;
+  viewYear  = latest.getFullYear();
+  viewMonth = latest.getMonth();
+
+  hide("loading");
+  showBlock("app");
+  renderAll();
+}
+
+// ── Helpers ────────────────────────────────────────────────────
+function pad(n) { return String(n).padStart(2, "0"); }
+function dateKey(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function formatTime(d) {
+  let h = d.getHours(), m = d.getMinutes(), ampm = h >= 12 ? "PM" : "AM";
+  if (h > 12) h -= 12;
+  if (h === 0) h = 12;
+  return `${pad(h)}:${pad(m)} ${ampm}`;
+}
+function formatFullDate(d) {
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  return `${days[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+function buildDayMap(logs) {
+  const map = {};
+  logs.forEach(log => {
+    const k = dateKey(log._date);
+    (map[k] = map[k] || []).push(log);
+  });
+  return map;
+}
+
+// ── Render ─────────────────────────────────────────────────────
+function renderAll() {
+  renderMonthLabel();
+  renderStats();
+  renderCalendar();
+}
+
+function renderMonthLabel() {
+  document.getElementById("monthLabel").textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+}
+
+function renderStats() {
+  const monthLogs = allLogs.filter(l =>
+    l._date.getFullYear() === viewYear && l._date.getMonth() === viewMonth
+  );
+  const inCount  = monthLogs.filter(l => l[TYPE_COL] === "IN").length;
+  const outCount = monthLogs.filter(l => l[TYPE_COL] === "OUT").length;
+  const days     = new Set(monthLogs.map(l => dateKey(l._date))).size;
+
+  document.getElementById("stat-days").textContent  = days;
+  document.getElementById("stat-in").textContent    = inCount;
+  document.getElementById("stat-out").textContent   = outCount;
+  document.getElementById("stat-total").textContent = monthLogs.length;
+}
+
+function renderCalendar() {
+  const grid = document.getElementById("calGrid");
+  grid.innerHTML = "";
+
+  const today    = new Date();
+  const todayKey = dateKey(today);
+
+  const monthLogs = allLogs.filter(l =>
+    l._date.getFullYear() === viewYear && l._date.getMonth() === viewMonth
+  );
+  const dayMap = buildDayMap(monthLogs);
+
+  const firstDay    = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const daysInPrev  = new Date(viewYear, viewMonth, 0).getDate();
+  const totalCells  = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, month, year, otherMonth = false;
+    if (i < firstDay) {
+      day = daysInPrev - firstDay + 1 + i;
+      month = viewMonth === 0 ? 11 : viewMonth - 1;
+      year  = viewMonth === 0 ? viewYear - 1 : viewYear;
+      otherMonth = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - firstDay - daysInMonth + 1;
+      month = viewMonth === 11 ? 0 : viewMonth + 1;
+      year  = viewMonth === 11 ? viewYear + 1 : viewYear;
+      otherMonth = true;
+    } else {
+      day   = i - firstDay + 1;
+      month = viewMonth;
+      year  = viewYear;
+    }
+
+    const cellDate = new Date(year, month, day);
+    const key  = dateKey(cellDate);
+    const logs = otherMonth ? [] : (dayMap[key] || []);
+    const isToday = key === todayKey;
+
+    const cell = document.createElement("div");
+    cell.className = [
+      "cal-cell",
+      otherMonth  ? "other-month" : "",
+      isToday     ? "today"       : "",
+      logs.length ? "has-data"    : ""
+    ].filter(Boolean).join(" ");
+
+    const dayNum = document.createElement("div");
+    dayNum.className = "day-num";
+    dayNum.textContent = day;
+    cell.appendChild(dayNum);
+
+    if (logs.length) {
+      const eventsDiv = document.createElement("div");
+      eventsDiv.className = "cell-events";
+      logs.slice(0, 2).forEach(log => {
+        const isIn = log[TYPE_COL] === "IN";
+        const pill = document.createElement("div");
+        pill.className = "cell-pill " + (isIn ? "in" : "out");
+        pill.innerHTML = `<div class="cell-pill-dot"></div><span class="pill-text">${isIn ? "In" : "Out"} ${formatTime(log._date)}</span>`;
+        eventsDiv.appendChild(pill);
+      });
+      if (logs.length > 2) {
+        const more = document.createElement("div");
+        more.className = "cell-more";
+        more.textContent = `+${logs.length - 2} more`;
+        eventsDiv.appendChild(more);
+      }
+      cell.appendChild(eventsDiv);
+      cell.addEventListener("click", () => showDetail(cellDate, logs));
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function showDetail(date, logs) {
+  const panel = document.getElementById("detailPanel");
+  document.getElementById("detailDate").textContent  = formatFullDate(date);
+  document.getElementById("detailCount").textContent = `${logs.length} event${logs.length !== 1 ? "s" : ""}`;
+
+  const list   = document.getElementById("detailList");
+  list.innerHTML = "";
+
+  [...logs].sort((a, b) => a._date - b._date).forEach(log => {
+    const isIn = log[TYPE_COL] === "IN";
+    const li   = document.createElement("li");
+    li.className = "detail-item " + (isIn ? "in" : "out");
+    li.innerHTML = `
+      <div class="detail-icon">${isIn ? "🟢" : "🔴"}</div>
+      <div class="detail-info">
+        <div class="detail-type">${isIn ? "Check In" : "Check Out"}</div>
+        <div class="detail-time">${formatTime(log._date)} · ${formatFullDate(log._date)}</div>
+      </div>
+      <span class="detail-badge">${isIn ? "IN" : "OUT"}</span>
+    `;
+    list.appendChild(li);
+  });
+
+  panel.classList.add("visible");
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function closeDetail() {
+  document.getElementById("detailPanel").classList.remove("visible");
+}
+
+// ── Navigation ─────────────────────────────────────────────────
+document.getElementById("prevMonth").addEventListener("click", () => {
+  if (viewMonth === 0) { viewMonth = 11; viewYear--; }
+  else viewMonth--;
+  closeDetail();
+  renderAll();
+});
+document.getElementById("nextMonth").addEventListener("click", () => {
+  if (viewMonth === 11) { viewMonth = 0; viewYear++; }
+  else viewMonth++;
+  closeDetail();
+  renderAll();
+});
+document.getElementById("detailClose").addEventListener("click", closeDetail);
+
+// ── Start ──────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
