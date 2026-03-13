@@ -79,6 +79,97 @@
     .empty-state .empty-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.4; }
     .empty-state p { font-size: 13px; }
 
+    /* ── PIN Modal Overlay ── */
+    .pin-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center;
+    }
+    .pin-overlay.visible { display: flex; }
+
+    .pin-modal {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      width: 320px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      animation: fadeUp 0.2s ease both;
+    }
+    .pin-modal-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+    }
+    .pin-lock-icon {
+      width: 32px; height: 32px; background: var(--surface2);
+      border: 1px solid var(--border2); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+    }
+    .pin-modal h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
+    .pin-modal p  { font-size: 12px; color: var(--text3); margin-bottom: 20px; margin-top: 3px; }
+
+    .pin-dots {
+      display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;
+    }
+    .pin-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid var(--border2);
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+    .pin-dot.error  { background: var(--out);    border-color: var(--out);    }
+
+    .pin-keypad {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px; margin-bottom: 14px;
+    }
+    .pin-key {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 0; cursor: pointer;
+      font-size: 16px; font-weight: 500; color: var(--text);
+      font-family: 'Geist Mono', monospace;
+      transition: background 0.1s, border-color 0.1s, transform 0.08s;
+      user-select: none;
+    }
+    .pin-key:hover  { background: var(--surface3); border-color: var(--border2); }
+    .pin-key:active { transform: scale(0.94); }
+    .pin-key.wide   { grid-column: span 2; }
+    .pin-key.del-key { font-size: 13px; color: var(--text2); }
+
+    .pin-error-msg {
+      font-size: 11px; color: var(--out); text-align: center;
+      min-height: 16px; margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .pin-cancel {
+      width: 100%; background: none; border: none;
+      color: var(--text3); font-size: 12px; font-family: inherit;
+      cursor: pointer; padding: 6px; margin-top: 2px;
+      border-radius: 8px; transition: color 0.1s;
+    }
+    .pin-cancel:hover { color: var(--text2); }
+
+    /* ── Admin bar ── */
+    .admin-bar {
+      display: none; align-items: center; gap: 10px;
+      background: #13130a; border: 1px solid #2a2a10;
+      border-radius: 10px; padding: 8px 14px;
+      margin-bottom: 14px; font-size: 12px;
+    }
+    .admin-bar.visible { display: flex; }
+    .admin-bar .admin-dot { width: 6px; height: 6px; background: #facc15; border-radius: 50%; flex-shrink:0; }
+    .admin-bar .admin-label { color: #a89a30; flex: 1; }
+    .admin-bar .lock-btn {
+      background: none; border: 1px solid #2a2a10;
+      border-radius: 6px; padding: 3px 10px; font-size: 11px;
+      color: #a89a30; cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .admin-bar .lock-btn:hover { background: #1a1a00; color: #facc15; }
+
     /* ── App ── */
     #app { max-width: 860px; margin: 0 auto; display: none; }
 
@@ -92,10 +183,7 @@
       font-size: 20px; font-weight: 600;
       letter-spacing: -0.04em; color: var(--text);
     }
-    .header-left p {
-      font-size: 12px; color: var(--text3);
-      margin-top: 3px;
-    }
+    .header-left p { font-size: 12px; color: var(--text3); margin-top: 3px; }
     .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
     .legend { display: flex; gap: 12px; align-items: center; }
@@ -128,14 +216,8 @@
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 14px 16px;
     }
-    .stat-label {
-      font-size: 10px; font-weight: 500; color: var(--text3);
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
-    }
-    .stat-value {
-      font-size: 24px; font-weight: 600; letter-spacing: -0.05em; line-height: 1;
-      font-family: 'Geist Mono', monospace;
-    }
+    .stat-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-family: 'Geist Mono', monospace; }
     .stat-value.green { color: var(--in); }
     .stat-value.red   { color: var(--out); }
 
@@ -144,21 +226,12 @@
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
     }
-    .cal-head {
-      display: grid; grid-template-columns: repeat(7, 1fr);
-      border-bottom: 1px solid var(--border);
-    }
-    .cal-head-cell {
-      text-align: center; padding: 10px 4px;
-      font-size: 10px; font-weight: 500; color: var(--text3);
-      text-transform: uppercase; letter-spacing: 0.08em;
-    }
+    .cal-head { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); }
+    .cal-head-cell { text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
     .cal-cell {
-      min-height: 78px; border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 7px 6px 5px; cursor: default; position: relative;
-      transition: background 0.1s;
+      min-height: 78px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 7px 6px 5px; cursor: default; position: relative; transition: background 0.1s;
     }
     .cal-cell:nth-child(7n) { border-right: none; }
     .cal-cell.other-month { background: #0d0d0d; }
@@ -166,8 +239,7 @@
     .cal-cell.today .day-num {
       background: var(--text); color: var(--bg);
       border-radius: 50%; width: 22px; height: 22px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600;
+      display: flex; align-items: center; justify-content: center; font-weight: 600;
     }
     .cal-cell.has-data { cursor: pointer; }
     .cal-cell.has-data:hover { background: var(--surface2); }
@@ -180,49 +252,25 @@
       font-family: 'Geist Mono', monospace;
     }
     .cell-events { display: flex; flex-direction: column; gap: 2px; }
-    .cell-pill {
-      font-size: 9px; font-weight: 500; padding: 2px 5px;
-      border-radius: 4px; display: flex; align-items: center; gap: 3px;
-      white-space: nowrap; overflow: hidden;
-    }
+    .cell-pill { font-size: 9px; font-weight: 500; padding: 2px 5px; border-radius: 4px; display: flex; align-items: center; gap: 3px; white-space: nowrap; overflow: hidden; }
     .cell-pill.in  { background: var(--in-bg);  color: var(--in);  }
     .cell-pill.out { background: var(--out-bg); color: var(--out); }
     .cell-pill-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
     .cell-more { font-size: 9px; color: var(--text3); padding-left: 2px; margin-top: 1px; }
 
     /* ── Detail panel ── */
-    .detail-panel {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; display: none;
-    }
+    .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; }
     .detail-panel.visible { display: block; }
 
-    .detail-header {
-      padding: 13px 16px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    .detail-header { padding: 13px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .detail-date { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
     .detail-meta { display: flex; align-items: center; gap: 8px; }
-    .detail-count {
-      font-size: 11px; color: var(--text3);
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 99px; padding: 2px 10px; font-weight: 500;
-      font-family: 'Geist Mono', monospace;
-    }
-    .detail-close {
-      background: none; border: none; cursor: pointer; color: var(--text3);
-      width: 26px; height: 26px; border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; transition: background 0.1s, color 0.1s;
-    }
+    .detail-count { font-size: 11px; color: var(--text3); background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 2px 10px; font-weight: 500; font-family: 'Geist Mono', monospace; }
+    .detail-close { background: none; border: none; cursor: pointer; color: var(--text3); width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: background 0.1s, color 0.1s; }
     .detail-close:hover { background: var(--surface3); color: var(--text); }
 
     .detail-list { list-style: none; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
-
-    .detail-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 12px; border-radius: 8px; border: 1px solid transparent;
-    }
+    .detail-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid transparent; }
     .detail-item.in  { background: var(--in-bg);  border-color: var(--in-border);  }
     .detail-item.out { background: var(--out-bg); border-color: var(--out-border); }
 
@@ -249,9 +297,34 @@
     .delete-btn.confirming { background: var(--out); border-color: var(--out); color: #fff; }
     .delete-btn.deleting   { opacity: 0.4; pointer-events: none; }
 
-    @keyframes spin    { to { transform: rotate(360deg); } }
-    @keyframes fadeUp  { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    /* Delete btn hidden when locked */
+    .delete-btn.locked {
+      opacity: 0.25; pointer-events: none; cursor: not-allowed;
+    }
+
+    /* ── Unlock button in detail header ── */
+    .unlock-btn {
+      background: none; border: 1px solid var(--border2);
+      border-radius: 6px; padding: 4px 10px;
+      font-size: 11px; font-weight: 500; cursor: pointer;
+      color: var(--text2); font-family: inherit;
+      display: flex; align-items: center; gap: 5px;
+      transition: all 0.15s;
+    }
+    .unlock-btn:hover { background: var(--surface3); color: var(--text); }
+    .unlock-btn.hidden { display: none; }
+
+    @keyframes spin   { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes shake  {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-5px); }
+      80%      { transform: translateX(5px); }
+    }
     .fade-in { animation: fadeUp 0.25s ease both; }
+    .shake   { animation: shake 0.35s ease; }
 
     @media (max-width: 600px) {
       .stats { grid-template-columns: repeat(2, 1fr); }
@@ -262,6 +335,38 @@
   </style>
 </head>
 <body>
+
+<!-- PIN Modal -->
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-modal">
+    <div class="pin-modal-header">
+      <div class="pin-lock-icon">🔐</div>
+      <h2>Admin PIN</h2>
+    </div>
+    <p>Enter your PIN to unlock delete mode for this session.</p>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-keypad" id="pinKeypad">
+      <button class="pin-key" data-k="1">1</button>
+      <button class="pin-key" data-k="2">2</button>
+      <button class="pin-key" data-k="3">3</button>
+      <button class="pin-key" data-k="4">4</button>
+      <button class="pin-key" data-k="5">5</button>
+      <button class="pin-key" data-k="6">6</button>
+      <button class="pin-key" data-k="7">7</button>
+      <button class="pin-key" data-k="8">8</button>
+      <button class="pin-key" data-k="9">9</button>
+      <button class="pin-key wide" data-k="0">0</button>
+      <button class="pin-key del-key" data-k="del">⌫</button>
+    </div>
+    <div class="pin-error-msg" id="pinError"></div>
+    <button class="pin-cancel" id="pinCancel">Cancel</button>
+  </div>
+</div>
 
 <div id="loading" class="loading">
   <div class="spinner"></div>
@@ -299,23 +404,18 @@
     </div>
   </div>
 
+  <!-- Admin bar shown when unlocked -->
+  <div class="admin-bar" id="adminBar">
+    <div class="admin-dot"></div>
+    <span class="admin-label">Admin mode active — delete is unlocked</span>
+    <button class="lock-btn" id="lockBtn">🔒 Lock</button>
+  </div>
+
   <div class="stats fade-in">
-    <div class="stat-card">
-      <div class="stat-label">Days Present</div>
-      <div class="stat-value" id="stat-days">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Check-ins</div>
-      <div class="stat-value green" id="stat-in">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Check-outs</div>
-      <div class="stat-value red" id="stat-out">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Events</div>
-      <div class="stat-value" id="stat-total">—</div>
-    </div>
+    <div class="stat-card"><div class="stat-label">Days Present</div><div class="stat-value" id="stat-days">—</div></div>
+    <div class="stat-card"><div class="stat-label">Check-ins</div><div class="stat-value green" id="stat-in">—</div></div>
+    <div class="stat-card"><div class="stat-label">Check-outs</div><div class="stat-value red" id="stat-out">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Events</div><div class="stat-value" id="stat-total">—</div></div>
   </div>
 
   <div class="cal-card fade-in">
@@ -333,6 +433,7 @@
       <div class="detail-date" id="detailDate"></div>
       <div class="detail-meta">
         <span class="detail-count" id="detailCount"></span>
+        <button class="unlock-btn" id="unlockBtn">🔐 Unlock to delete</button>
         <button class="detail-close" id="detailClose">✕</button>
       </div>
     </div>
@@ -341,14 +442,22 @@
 </div>
 
 <script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
 const SUPABASE_URL = "https://kpansofmofolnnfnwlml.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYW5zb2Ztb2ZvbG5uZm53bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzU3ODksImV4cCI6MjA4ODExMTc4OX0.v_TSJONVfpvxuGQnK6O2S9ZXEpRNdfeOvXELeN_yYW0";
-const TABLE    = "office_logs";
-const TIME_COL = "event_time";
-const TYPE_COL = "event_type";
+const TABLE        = "office_logs";
+const TIME_COL     = "event_time";
+const TYPE_COL     = "event_type";
+
+// ── SET YOUR PIN HERE ────────────────────────────────────────────────────────
+const ADMIN_PIN = "2281"; // ← change this to your desired PIN
+// ────────────────────────────────────────────────────────────────────────────
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 let allLogs = [], viewYear, viewMonth, selectedCell = null;
+let adminUnlocked = false;
+let pinBuffer = "";
+let pinResolve = null; // callback when PIN modal closes
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,"0");
@@ -367,6 +476,7 @@ function buildDayMap(logs) {
   return map;
 }
 
+// ── Error ────────────────────────────────────────────────────────────────────
 function showError(msg, detail) {
   $("loading").style.display = "none"; $("app").style.display = "none"; $("emptyState").style.display = "none";
   $("errorMsg").textContent = msg;
@@ -374,6 +484,115 @@ function showError(msg, detail) {
   $("errorBox").style.display = "block";
 }
 
+// ── PIN logic ─────────────────────────────────────────────────────────────────
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    const dot = $(`pd${i}`);
+    dot.classList.remove("filled","error");
+    if (i < pinBuffer.length) dot.classList.add("filled");
+  }
+}
+function flashError(msg) {
+  $("pinError").textContent = msg;
+  for (let i = 0; i < 4; i++) { const d = $(`pd${i}`); d.classList.remove("filled"); d.classList.add("error"); }
+  const dots = $("pinDots"); dots.classList.add("shake");
+  setTimeout(() => {
+    dots.classList.remove("shake");
+    for (let i = 0; i < 4; i++) $(`pd${i}`).classList.remove("error");
+    $("pinError").textContent = "";
+    pinBuffer = "";
+    updatePinDots();
+  }, 600);
+}
+
+function openPinModal() {
+  return new Promise(resolve => {
+    pinResolve = resolve;
+    pinBuffer = "";
+    $("pinError").textContent = "";
+    updatePinDots();
+    $("pinOverlay").classList.add("visible");
+  });
+}
+function closePinModal(success) {
+  $("pinOverlay").classList.remove("visible");
+  if (pinResolve) { pinResolve(success); pinResolve = null; }
+}
+
+$("pinKeypad").addEventListener("click", e => {
+  const btn = e.target.closest(".pin-key");
+  if (!btn) return;
+  const k = btn.dataset.k;
+  if (k === "del") { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); return; }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += k;
+  updatePinDots();
+  if (pinBuffer.length === 4) {
+    if (pinBuffer === ADMIN_PIN) {
+      closePinModal(true);
+    } else {
+      flashError("Incorrect PIN");
+    }
+  }
+});
+
+// Keyboard support
+document.addEventListener("keydown", e => {
+  if (!$("pinOverlay").classList.contains("visible")) return;
+  if (e.key >= "0" && e.key <= "9") {
+    if (pinBuffer.length < 4) {
+      pinBuffer += e.key;
+      updatePinDots();
+      if (pinBuffer.length === 4) {
+        if (pinBuffer === ADMIN_PIN) closePinModal(true);
+        else flashError("Incorrect PIN");
+      }
+    }
+  } else if (e.key === "Backspace") {
+    pinBuffer = pinBuffer.slice(0,-1);
+    updatePinDots();
+  } else if (e.key === "Escape") {
+    closePinModal(false);
+  }
+});
+
+$("pinCancel").addEventListener("click", () => closePinModal(false));
+$("pinOverlay").addEventListener("click", e => { if (e.target === $("pinOverlay")) closePinModal(false); });
+
+// ── Admin unlock/lock ──────────────────────────────────────────────────────────
+async function requestUnlock() {
+  const ok = await openPinModal();
+  if (!ok) return false;
+  adminUnlocked = true;
+  $("adminBar").classList.add("visible");
+  refreshDeleteButtons();
+  refreshUnlockBtn();
+  return true;
+}
+
+function lock() {
+  adminUnlocked = false;
+  $("adminBar").classList.remove("visible");
+  refreshDeleteButtons();
+  refreshUnlockBtn();
+}
+
+function refreshDeleteButtons() {
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    if (adminUnlocked) btn.classList.remove("locked");
+    else btn.classList.add("locked");
+  });
+}
+function refreshUnlockBtn() {
+  const ub = $("unlockBtn");
+  if (!ub) return;
+  ub.classList.toggle("hidden", adminUnlocked);
+}
+
+$("lockBtn").addEventListener("click", lock);
+$("unlockBtn").addEventListener("click", async () => { await requestUnlock(); });
+
+// ── Data loading ───────────────────────────────────────────────────────────────
 async function loadData() {
   $("errorBox").style.display = "none"; $("app").style.display = "none"; $("emptyState").style.display = "none";
   $("loading").style.display = "flex";
@@ -395,11 +614,17 @@ async function loadData() {
   renderAll();
 }
 
+// ── Trash SVG ─────────────────────────────────────────────────────────────────
 function trashSVG() {
   return `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 3h8M4 3V2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M4.5 5v3.5M6.5 5v3.5M2 3l.5 5.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
+// ── Delete ────────────────────────────────────────────────────────────────────
 async function deleteLog(id, btn, li) {
+  if (!adminUnlocked) {
+    const ok = await requestUnlock();
+    if (!ok) return;
+  }
   if (!btn.dataset.confirming) {
     btn.dataset.confirming = "1";
     btn.classList.add("confirming");
@@ -433,6 +658,7 @@ async function deleteLog(id, btn, li) {
   } catch(e) { alert("Network error: " + e.message); btn.classList.remove("deleting"); btn.innerHTML = trashSVG()+" Delete"; }
 }
 
+// ── Render ────────────────────────────────────────────────────────────────────
 function renderAll() { renderMonthLabel(); renderStats(); renderCalendar(); }
 function renderMonthLabel() { $("monthLabel").textContent = `${MONTHS[viewMonth]} ${viewYear}`; }
 function renderStats() {
@@ -494,11 +720,12 @@ function renderCalendar() {
 function showDetail(date, logs) {
   $("detailDate").textContent  = formatFullDate(date);
   $("detailCount").textContent = `${logs.length} event${logs.length!==1?"s":""}`;
+  refreshUnlockBtn();
   const list = $("detailList"); list.innerHTML = "";
   [...logs].sort((a,b)=>a._date-b._date).forEach(log => {
     const isIn = log[TYPE_COL]==="IN";
     const li   = document.createElement("li"); li.className="detail-item "+(isIn?"in":"out");
-    const btn  = document.createElement("button"); btn.className="delete-btn";
+    const btn  = document.createElement("button"); btn.className="delete-btn" + (adminUnlocked ? "" : " locked");
     btn.innerHTML = trashSVG()+" Delete";
     btn.addEventListener("click", e => { e.stopPropagation(); deleteLog(log.id, btn, li); });
     li.innerHTML = `<div class="detail-dot"></div><div class="detail-info"><div class="detail-type">${isIn?"Check In":"Check Out"}</div><div class="detail-time">${formatTime(log._date)}</div></div>`;
