@@ -36,7 +36,6 @@
       color: var(--text);
     }
 
-    /* ── Loading ── */
     .loading {
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -51,7 +50,6 @@
       animation: spin 0.8s linear infinite;
     }
 
-    /* ── Error box ── */
     .error-box {
       max-width: 600px; margin: 60px auto;
       background: var(--out-bg); border: 1px solid var(--out-border);
@@ -60,10 +58,8 @@
     .error-box h3 { font-size: 14px; color: var(--out); font-weight: 600; margin-bottom: 8px; }
     .error-box p  { font-size: 13px; color: var(--text2); line-height: 1.6; }
     .error-box code {
-      display: block; margin-top: 12px;
-      background: #1a0000; border-radius: 8px; padding: 10px 14px;
-      font-family: 'Geist Mono', monospace; font-size: 11px;
-      color: #ff8888; word-break: break-all; white-space: pre-wrap;
+      display: block; margin-top: 12px; background: #1a0000; border-radius: 8px; padding: 10px 14px;
+      font-family: 'Geist Mono', monospace; font-size: 11px; color: #ff8888; word-break: break-all; white-space: pre-wrap;
     }
     .error-box .retry-btn {
       margin-top: 14px; background: var(--text); color: var(--bg);
@@ -71,161 +67,119 @@
       font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
     }
 
-    /* ── Empty ── */
-    .empty-state {
-      max-width: 600px; margin: 60px auto; text-align: center;
-      color: var(--text3); display: none;
-    }
+    .empty-state { max-width: 600px; margin: 60px auto; text-align: center; color: var(--text3); display: none; }
     .empty-state .empty-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.4; }
     .empty-state p { font-size: 13px; }
 
-    /* ── PIN Modal Overlay ── */
+    /* ── PIN Modal ── */
     .pin-overlay {
       position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
       display: none; align-items: center; justify-content: center;
     }
     .pin-overlay.visible { display: flex; }
-
     .pin-modal {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: 16px;
-      padding: 28px 28px 24px;
-      width: 320px;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-      animation: fadeUp 0.2s ease both;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 16px; padding: 28px 28px 24px; width: 320px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6); animation: fadeUp 0.2s ease both;
     }
-    .pin-modal-header {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
-    }
+    .pin-modal-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
     .pin-lock-icon {
       width: 32px; height: 32px; background: var(--surface2);
       border: 1px solid var(--border2); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
     }
     .pin-modal h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
-    .pin-modal p  { font-size: 12px; color: var(--text3); margin-bottom: 20px; margin-top: 3px; }
-
-    .pin-dots {
-      display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;
-    }
+    .pin-modal > p { font-size: 12px; color: var(--text3); margin-bottom: 20px; margin-top: 3px; }
+    .pin-dots { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
     .pin-dot {
       width: 12px; height: 12px; border-radius: 50%;
-      border: 2px solid var(--border2);
-      background: transparent;
-      transition: all 0.15s;
+      border: 2px solid var(--border2); background: transparent; transition: all 0.15s;
     }
     .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
-    .pin-dot.error  { background: var(--out);    border-color: var(--out);    }
-
-    .pin-keypad {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 8px; margin-bottom: 14px;
-    }
+    .pin-dot.error  { background: var(--out); border-color: var(--out); }
+    .pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
     .pin-key {
       background: var(--surface2); border: 1px solid var(--border);
       border-radius: 10px; padding: 14px 0; cursor: pointer;
       font-size: 16px; font-weight: 500; color: var(--text);
       font-family: 'Geist Mono', monospace;
-      transition: background 0.1s, border-color 0.1s, transform 0.08s;
-      user-select: none;
+      transition: background 0.1s, border-color 0.1s, transform 0.08s; user-select: none;
     }
     .pin-key:hover  { background: var(--surface3); border-color: var(--border2); }
     .pin-key:active { transform: scale(0.94); }
     .pin-key.wide   { grid-column: span 2; }
     .pin-key.del-key { font-size: 13px; color: var(--text2); }
-
-    .pin-error-msg {
-      font-size: 11px; color: var(--out); text-align: center;
-      min-height: 16px; margin-bottom: 4px;
-      letter-spacing: 0.02em;
-    }
-
-    .pin-cancel {
-      width: 100%; background: none; border: none;
-      color: var(--text3); font-size: 12px; font-family: inherit;
-      cursor: pointer; padding: 6px; margin-top: 2px;
-      border-radius: 8px; transition: color 0.1s;
-    }
+    .pin-error-msg { font-size: 11px; color: var(--out); text-align: center; min-height: 16px; margin-bottom: 4px; letter-spacing: 0.02em; }
+    .pin-cancel { width: 100%; background: none; border: none; color: var(--text3); font-size: 12px; font-family: inherit; cursor: pointer; padding: 6px; margin-top: 2px; border-radius: 8px; transition: color 0.1s; }
     .pin-cancel:hover { color: var(--text2); }
-
-    /* ── Admin bar ── */
-    .admin-bar {
-      display: none; align-items: center; gap: 10px;
-      background: #13130a; border: 1px solid #2a2a10;
-      border-radius: 10px; padding: 8px 14px;
-      margin-bottom: 14px; font-size: 12px;
-    }
-    .admin-bar.visible { display: flex; }
-    .admin-bar .admin-dot { width: 6px; height: 6px; background: #facc15; border-radius: 50%; flex-shrink:0; }
-    .admin-bar .admin-label { color: #a89a30; flex: 1; }
-    .admin-bar .lock-btn {
-      background: none; border: 1px solid #2a2a10;
-      border-radius: 6px; padding: 3px 10px; font-size: 11px;
-      color: #a89a30; cursor: pointer; font-family: inherit;
-      transition: all 0.15s;
-    }
-    .admin-bar .lock-btn:hover { background: #1a1a00; color: #facc15; }
 
     /* ── App ── */
     #app { max-width: 860px; margin: 0 auto; display: none; }
 
     /* ── Header ── */
     .header {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; flex-wrap: wrap;
-      gap: 16px; margin-bottom: 28px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
     }
-    .header-left h1 {
-      font-size: 20px; font-weight: 600;
-      letter-spacing: -0.04em; color: var(--text);
-    }
-    .header-left p { font-size: 12px; color: var(--text3); margin-top: 3px; }
-    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .header-left h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.04em; color: var(--text); }
+    .header-left p  { font-size: 12px; color: var(--text3); margin-top: 3px; }
+    .header-right   { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
     .legend { display: flex; gap: 12px; align-items: center; }
     .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
-    .legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .legend-dot  { width: 6px; height: 6px; border-radius: 50%; }
 
     .month-nav {
       display: flex; align-items: center; gap: 2px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 4px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 4px;
     }
     .month-nav button {
-      background: none; border: none; width: 28px; height: 28px;
-      border-radius: 7px; cursor: pointer; color: var(--text2);
-      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; width: 28px; height: 28px; border-radius: 7px;
+      cursor: pointer; color: var(--text2); display: flex; align-items: center; justify-content: center;
       font-size: 15px; transition: background 0.1s, color 0.1s;
     }
     .month-nav button:hover { background: var(--surface2); color: var(--text); }
-    .month-nav .month-label {
-      font-size: 13px; font-weight: 500; color: var(--text);
-      min-width: 118px; text-align: center; letter-spacing: -0.01em;
+    .month-nav .month-label { font-size: 13px; font-weight: 500; color: var(--text); min-width: 118px; text-align: center; letter-spacing: -0.01em; }
+
+    /* ── Admin strip — always visible ── */
+    .admin-strip {
+      display: flex; align-items: center; gap: 10px;
+      border-radius: 10px; padding: 9px 14px; margin-bottom: 14px;
+      font-size: 12px; border: 1px solid var(--border);
+      background: var(--surface); transition: background 0.25s, border-color 0.25s;
     }
+    .admin-strip.unlocked { background: #13130a; border-color: #2a2a10; }
+
+    .strip-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text3); flex-shrink: 0; transition: background 0.25s;
+    }
+    .admin-strip.unlocked .strip-dot { background: #facc15; }
+
+    .strip-label { flex: 1; font-size: 12px; color: var(--text3); transition: color 0.25s; }
+    .admin-strip.unlocked .strip-label { color: #a89a30; }
+
+    .strip-action {
+      background: none; border: 1px solid var(--border2);
+      border-radius: 6px; padding: 5px 13px; font-size: 11px; font-weight: 500;
+      cursor: pointer; font-family: inherit; color: var(--text2);
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .strip-action:hover { background: var(--surface2); color: var(--text); }
+    .admin-strip.unlocked .strip-action { color: #a89a30; border-color: #2a2a10; }
+    .admin-strip.unlocked .strip-action:hover { background: #1a1a00; color: #facc15; }
 
     /* ── Stats ── */
-    .stats {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 8px; margin-bottom: 12px;
-    }
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 14px 16px;
-    }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
     .stat-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
     .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-family: 'Geist Mono', monospace; }
     .stat-value.green { color: var(--in); }
     .stat-value.red   { color: var(--out); }
 
     /* ── Calendar ── */
-    .cal-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
-    }
+    .cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
     .cal-head { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); }
     .cal-head-cell { text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
@@ -237,20 +191,14 @@
     .cal-cell.other-month { background: #0d0d0d; }
     .cal-cell.other-month .day-num { color: var(--text3); }
     .cal-cell.today .day-num {
-      background: var(--text); color: var(--bg);
-      border-radius: 50%; width: 22px; height: 22px;
-      display: flex; align-items: center; justify-content: center; font-weight: 600;
+      background: var(--text); color: var(--bg); border-radius: 50%;
+      width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 600;
     }
     .cal-cell.has-data { cursor: pointer; }
     .cal-cell.has-data:hover { background: var(--surface2); }
     .cal-cell.selected { background: var(--surface2) !important; outline: 1px solid var(--border2); outline-offset: -1px; }
 
-    .day-num {
-      font-size: 11px; font-weight: 500; color: var(--text2);
-      margin-bottom: 4px; width: 22px; height: 22px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Geist Mono', monospace;
-    }
+    .day-num { font-size: 11px; font-weight: 500; color: var(--text2); margin-bottom: 4px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-family: 'Geist Mono', monospace; }
     .cell-events { display: flex; flex-direction: column; gap: 2px; }
     .cell-pill { font-size: 9px; font-weight: 500; padding: 2px 5px; border-radius: 4px; display: flex; align-items: center; gap: 3px; white-space: nowrap; overflow: hidden; }
     .cell-pill.in  { background: var(--in-bg);  color: var(--in);  }
@@ -261,23 +209,19 @@
     /* ── Detail panel ── */
     .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; }
     .detail-panel.visible { display: block; }
-
     .detail-header { padding: 13px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .detail-date { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
     .detail-meta { display: flex; align-items: center; gap: 8px; }
     .detail-count { font-size: 11px; color: var(--text3); background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 2px 10px; font-weight: 500; font-family: 'Geist Mono', monospace; }
     .detail-close { background: none; border: none; cursor: pointer; color: var(--text3); width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: background 0.1s, color 0.1s; }
     .detail-close:hover { background: var(--surface3); color: var(--text); }
-
     .detail-list { list-style: none; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
     .detail-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid transparent; }
-    .detail-item.in  { background: var(--in-bg);  border-color: var(--in-border);  }
+    .detail-item.in  { background: var(--in-bg);  border-color: var(--in-border); }
     .detail-item.out { background: var(--out-bg); border-color: var(--out-border); }
-
     .detail-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .detail-item.in  .detail-dot { background: var(--in); }
     .detail-item.out .detail-dot { background: var(--out); }
-
     .detail-info { flex: 1; }
     .detail-type { font-size: 13px; font-weight: 600; }
     .detail-item.in  .detail-type { color: var(--in); }
@@ -286,51 +230,32 @@
 
     /* ── Delete button ── */
     .delete-btn {
-      background: none; border: 1px solid var(--border);
-      border-radius: 6px; padding: 5px 10px;
-      font-size: 11px; font-weight: 500; cursor: pointer;
-      color: var(--text3); font-family: inherit;
+      background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px;
+      font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text3); font-family: inherit;
       display: flex; align-items: center; gap: 5px;
       transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
     }
-    .delete-btn:hover { background: var(--out-bg); border-color: var(--out-border); color: var(--out); }
+    .delete-btn:hover   { background: var(--out-bg); border-color: var(--out-border); color: var(--out); }
     .delete-btn.confirming { background: var(--out); border-color: var(--out); color: #fff; }
     .delete-btn.deleting   { opacity: 0.4; pointer-events: none; }
-
-    /* Delete btn hidden when locked */
-    .delete-btn.locked {
-      opacity: 0.25; pointer-events: none; cursor: not-allowed;
-    }
-
-    /* ── Unlock button in detail header ── */
-    .unlock-btn {
-      background: none; border: 1px solid var(--border2);
-      border-radius: 6px; padding: 4px 10px;
-      font-size: 11px; font-weight: 500; cursor: pointer;
-      color: var(--text2); font-family: inherit;
-      display: flex; align-items: center; gap: 5px;
-      transition: all 0.15s;
-    }
-    .unlock-btn:hover { background: var(--surface3); color: var(--text); }
-    .unlock-btn.hidden { display: none; }
+    .delete-btn.locked     { opacity: 0.2; pointer-events: none; }
 
     @keyframes spin   { to { transform: rotate(360deg); } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     @keyframes shake  {
       0%,100% { transform: translateX(0); }
-      20%      { transform: translateX(-8px); }
-      40%      { transform: translateX(8px); }
-      60%      { transform: translateX(-5px); }
-      80%      { transform: translateX(5px); }
+      20% { transform: translateX(-8px); } 40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); } 80% { transform: translateX(5px); }
     }
     .fade-in { animation: fadeUp 0.25s ease both; }
     .shake   { animation: shake 0.35s ease; }
 
     @media (max-width: 600px) {
+      body { padding: 20px 12px 60px; }
       .stats { grid-template-columns: repeat(2, 1fr); }
       .cal-cell { min-height: 54px; }
       .cell-pill .pill-text { display: none; }
-      body { padding: 20px 12px 60px; }
+      .strip-label { font-size: 11px; }
     }
   </style>
 </head>
@@ -404,11 +329,11 @@
     </div>
   </div>
 
-  <!-- Admin bar shown when unlocked -->
-  <div class="admin-bar" id="adminBar">
-    <div class="admin-dot"></div>
-    <span class="admin-label">Admin mode active — delete is unlocked</span>
-    <button class="lock-btn" id="lockBtn">🔒 Lock</button>
+  <!-- Always-visible admin strip -->
+  <div class="admin-strip fade-in" id="adminStrip">
+    <div class="strip-dot"></div>
+    <span class="strip-label" id="stripLabel">🔒 Locked — unlock to enable deleting records</span>
+    <button class="strip-action" id="stripBtn">Unlock</button>
   </div>
 
   <div class="stats fade-in">
@@ -433,7 +358,6 @@
       <div class="detail-date" id="detailDate"></div>
       <div class="detail-meta">
         <span class="detail-count" id="detailCount"></span>
-        <button class="unlock-btn" id="unlockBtn">🔐 Unlock to delete</button>
         <button class="detail-close" id="detailClose">✕</button>
       </div>
     </div>
@@ -442,22 +366,21 @@
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
+// ── CONFIG ────────────────────────────────────────────────────────────────────
 const SUPABASE_URL = "https://kpansofmofolnnfnwlml.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYW5zb2Ztb2ZvbG5uZm53bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzU3ODksImV4cCI6MjA4ODExMTc4OX0.v_TSJONVfpvxuGQnK6O2S9ZXEpRNdfeOvXELeN_yYW0";
-const TABLE        = "office_logs";
-const TIME_COL     = "event_time";
-const TYPE_COL     = "event_type";
+const TABLE    = "office_logs";
+const TIME_COL = "event_time";
+const TYPE_COL = "event_type";
 
-// ── SET YOUR PIN HERE ────────────────────────────────────────────────────────
-const ADMIN_PIN = "2281"; // ← change this to your desired PIN
-// ────────────────────────────────────────────────────────────────────────────
+// ── YOUR PIN ──────────────────────────────────────────────────────────────────
+const ADMIN_PIN = "2281"; // ← change this
+// ─────────────────────────────────────────────────────────────────────────────
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 let allLogs = [], viewYear, viewMonth, selectedCell = null;
 let adminUnlocked = false;
-let pinBuffer = "";
-let pinResolve = null; // callback when PIN modal closes
+let pinBuffer = "", pinResolve = null;
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,"0");
@@ -472,278 +395,215 @@ function formatFullDate(d) {
 }
 function buildDayMap(logs) {
   const map = {};
-  logs.forEach(l => { const k = dateKey(l._date); (map[k] = map[k]||[]).push(l); });
+  logs.forEach(l => { const k = dateKey(l._date); (map[k]=map[k]||[]).push(l); });
   return map;
 }
 
-// ── Error ────────────────────────────────────────────────────────────────────
 function showError(msg, detail) {
-  $("loading").style.display = "none"; $("app").style.display = "none"; $("emptyState").style.display = "none";
+  $("loading").style.display="none"; $("app").style.display="none"; $("emptyState").style.display="none";
   $("errorMsg").textContent = msg;
-  const dc = $("errorDetail"); dc.textContent = detail||""; dc.style.display = detail?"block":"none";
-  $("errorBox").style.display = "block";
+  const dc = $("errorDetail"); dc.textContent=detail||""; dc.style.display=detail?"block":"none";
+  $("errorBox").style.display="block";
 }
 
-// ── PIN logic ─────────────────────────────────────────────────────────────────
+// ── PIN ───────────────────────────────────────────────────────────────────────
 function updatePinDots() {
-  for (let i = 0; i < 4; i++) {
-    const dot = $(`pd${i}`);
-    dot.classList.remove("filled","error");
-    if (i < pinBuffer.length) dot.classList.add("filled");
+  for (let i=0;i<4;i++) {
+    const d=$(`pd${i}`); d.classList.remove("filled","error");
+    if (i<pinBuffer.length) d.classList.add("filled");
   }
 }
-function flashError(msg) {
-  $("pinError").textContent = msg;
-  for (let i = 0; i < 4; i++) { const d = $(`pd${i}`); d.classList.remove("filled"); d.classList.add("error"); }
-  const dots = $("pinDots"); dots.classList.add("shake");
-  setTimeout(() => {
+function flashPinError(msg) {
+  $("pinError").textContent=msg;
+  for (let i=0;i<4;i++){const d=$(`pd${i}`);d.classList.remove("filled");d.classList.add("error");}
+  const dots=$("pinDots"); dots.classList.add("shake");
+  setTimeout(()=>{
     dots.classList.remove("shake");
-    for (let i = 0; i < 4; i++) $(`pd${i}`).classList.remove("error");
-    $("pinError").textContent = "";
-    pinBuffer = "";
-    updatePinDots();
-  }, 600);
+    for(let i=0;i<4;i++) $(`pd${i}`).classList.remove("error");
+    $("pinError").textContent=""; pinBuffer=""; updatePinDots();
+  },600);
 }
-
 function openPinModal() {
-  return new Promise(resolve => {
-    pinResolve = resolve;
-    pinBuffer = "";
-    $("pinError").textContent = "";
-    updatePinDots();
-    $("pinOverlay").classList.add("visible");
+  return new Promise(resolve=>{
+    pinResolve=resolve; pinBuffer=""; $("pinError").textContent="";
+    updatePinDots(); $("pinOverlay").classList.add("visible");
   });
 }
-function closePinModal(success) {
+function closePinModal(ok) {
   $("pinOverlay").classList.remove("visible");
-  if (pinResolve) { pinResolve(success); pinResolve = null; }
+  if(pinResolve){pinResolve(ok);pinResolve=null;}
 }
-
-$("pinKeypad").addEventListener("click", e => {
-  const btn = e.target.closest(".pin-key");
-  if (!btn) return;
-  const k = btn.dataset.k;
-  if (k === "del") { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); return; }
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += k;
-  updatePinDots();
-  if (pinBuffer.length === 4) {
-    if (pinBuffer === ADMIN_PIN) {
-      closePinModal(true);
-    } else {
-      flashError("Incorrect PIN");
-    }
+$("pinKeypad").addEventListener("click",e=>{
+  const btn=e.target.closest(".pin-key"); if(!btn) return;
+  const k=btn.dataset.k;
+  if(k==="del"){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();return;}
+  if(pinBuffer.length>=4) return;
+  pinBuffer+=k; updatePinDots();
+  if(pinBuffer.length===4){
+    if(pinBuffer===ADMIN_PIN) closePinModal(true);
+    else flashPinError("Incorrect PIN");
   }
 });
-
-// Keyboard support
-document.addEventListener("keydown", e => {
-  if (!$("pinOverlay").classList.contains("visible")) return;
-  if (e.key >= "0" && e.key <= "9") {
-    if (pinBuffer.length < 4) {
-      pinBuffer += e.key;
-      updatePinDots();
-      if (pinBuffer.length === 4) {
-        if (pinBuffer === ADMIN_PIN) closePinModal(true);
-        else flashError("Incorrect PIN");
-      }
-    }
-  } else if (e.key === "Backspace") {
-    pinBuffer = pinBuffer.slice(0,-1);
-    updatePinDots();
-  } else if (e.key === "Escape") {
-    closePinModal(false);
-  }
+document.addEventListener("keydown",e=>{
+  if(!$("pinOverlay").classList.contains("visible")) return;
+  if(e.key>="0"&&e.key<="9"){
+    if(pinBuffer.length<4){pinBuffer+=e.key;updatePinDots();}
+    if(pinBuffer.length===4){if(pinBuffer===ADMIN_PIN)closePinModal(true);else flashPinError("Incorrect PIN");}
+  } else if(e.key==="Backspace"){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();}
+    else if(e.key==="Escape"){closePinModal(false);}
 });
+$("pinCancel").addEventListener("click",()=>closePinModal(false));
+$("pinOverlay").addEventListener("click",e=>{if(e.target===$("pinOverlay"))closePinModal(false);});
 
-$("pinCancel").addEventListener("click", () => closePinModal(false));
-$("pinOverlay").addEventListener("click", e => { if (e.target === $("pinOverlay")) closePinModal(false); });
-
-// ── Admin unlock/lock ──────────────────────────────────────────────────────────
-async function requestUnlock() {
-  const ok = await openPinModal();
-  if (!ok) return false;
-  adminUnlocked = true;
-  $("adminBar").classList.add("visible");
-  refreshDeleteButtons();
-  refreshUnlockBtn();
-  return true;
-}
-
-function lock() {
-  adminUnlocked = false;
-  $("adminBar").classList.remove("visible");
-  refreshDeleteButtons();
-  refreshUnlockBtn();
-}
-
-function refreshDeleteButtons() {
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    if (adminUnlocked) btn.classList.remove("locked");
-    else btn.classList.add("locked");
+// ── Admin strip ───────────────────────────────────────────────────────────────
+function updateStrip() {
+  const strip=$("adminStrip"), label=$("stripLabel"), btn=$("stripBtn");
+  if(adminUnlocked){
+    strip.classList.add("unlocked");
+    label.textContent="🔓 Admin mode — delete is unlocked";
+    btn.textContent="Lock";
+  } else {
+    strip.classList.remove("unlocked");
+    label.textContent="🔒 Locked — unlock to enable deleting records";
+    btn.textContent="Unlock";
+  }
+  document.querySelectorAll(".delete-btn").forEach(b=>{
+    adminUnlocked ? b.classList.remove("locked") : b.classList.add("locked");
   });
 }
-function refreshUnlockBtn() {
-  const ub = $("unlockBtn");
-  if (!ub) return;
-  ub.classList.toggle("hidden", adminUnlocked);
-}
+$("stripBtn").addEventListener("click",async()=>{
+  if(adminUnlocked){adminUnlocked=false;updateStrip();}
+  else{const ok=await openPinModal();if(ok){adminUnlocked=true;updateStrip();}}
+});
 
-$("lockBtn").addEventListener("click", lock);
-$("unlockBtn").addEventListener("click", async () => { await requestUnlock(); });
-
-// ── Data loading ───────────────────────────────────────────────────────────────
+// ── Load data ─────────────────────────────────────────────────────────────────
 async function loadData() {
-  $("errorBox").style.display = "none"; $("app").style.display = "none"; $("emptyState").style.display = "none";
-  $("loading").style.display = "flex";
+  $("errorBox").style.display="none"; $("app").style.display="none"; $("emptyState").style.display="none";
+  $("loading").style.display="flex";
   let res;
   try {
-    res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?order=${TIME_COL}.desc&limit=5000`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    res=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?order=${TIME_COL}.desc&limit=5000`,{
+      headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}
     });
-  } catch(e) { showError("Network error — cannot reach Supabase.", e.message); return; }
-  if (!res.ok) { const b = await res.text().catch(()=>""); showError(`HTTP ${res.status} — check RLS settings.`, b.slice(0,300)); return; }
-  const data = await res.json().catch(e=>{ showError("Parse error.",e.message); return null; });
-  if (!data || !Array.isArray(data)) return;
-  if (!data.length) { $("loading").style.display="none"; $("emptyState").style.display="block"; return; }
-  allLogs = data.map(l=>({...l, _date:new Date(l[TIME_COL])})).filter(l=>!isNaN(l._date));
-  if (!allLogs.length) { showError(`No valid dates in "${TIME_COL}".`); return; }
-  const latest = allLogs[0]._date;
-  viewYear = latest.getFullYear(); viewMonth = latest.getMonth();
-  $("loading").style.display = "none"; $("app").style.display = "block";
+  } catch(e){showError("Network error — cannot reach Supabase.",e.message);return;}
+  if(!res.ok){const b=await res.text().catch(()=>"");showError(`HTTP ${res.status} — check RLS settings.`,b.slice(0,300));return;}
+  const data=await res.json().catch(e=>{showError("Parse error.",e.message);return null;});
+  if(!data||!Array.isArray(data)) return;
+  if(!data.length){$("loading").style.display="none";$("emptyState").style.display="block";return;}
+  allLogs=data.map(l=>({...l,_date:new Date(l[TIME_COL])})).filter(l=>!isNaN(l._date));
+  if(!allLogs.length){showError(`No valid dates in "${TIME_COL}".`);return;}
+  const latest=allLogs[0]._date;
+  viewYear=latest.getFullYear(); viewMonth=latest.getMonth();
+  $("loading").style.display="none"; $("app").style.display="block";
   renderAll();
 }
 
-// ── Trash SVG ─────────────────────────────────────────────────────────────────
-function trashSVG() {
-  return `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 3h8M4 3V2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M4.5 5v3.5M6.5 5v3.5M2 3l.5 5.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function trashSVG(){
+  return`<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 3h8M4 3V2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M4.5 5v3.5M6.5 5v3.5M2 3l.5 5.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
-// ── Delete ────────────────────────────────────────────────────────────────────
-async function deleteLog(id, btn, li) {
-  if (!adminUnlocked) {
-    const ok = await requestUnlock();
-    if (!ok) return;
-  }
-  if (!btn.dataset.confirming) {
-    btn.dataset.confirming = "1";
-    btn.classList.add("confirming");
-    btn.innerHTML = "Confirm?";
-    setTimeout(() => {
-      if (btn.dataset.confirming) {
-        delete btn.dataset.confirming;
-        btn.classList.remove("confirming");
-        btn.innerHTML = trashSVG() + " Delete";
-      }
-    }, 3000);
+async function deleteLog(id,btn,li) {
+  if(!adminUnlocked){const ok=await openPinModal();if(!ok)return;adminUnlocked=true;updateStrip();}
+  if(!btn.dataset.confirming){
+    btn.dataset.confirming="1";btn.classList.add("confirming");btn.innerHTML="Confirm?";
+    setTimeout(()=>{
+      if(btn.dataset.confirming){delete btn.dataset.confirming;btn.classList.remove("confirming");btn.innerHTML=trashSVG()+" Delete";}
+    },3000);
     return;
   }
-  btn.classList.add("deleting"); btn.textContent = "…";
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${id}`, {
-      method: "DELETE",
-      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, Prefer: "return=minimal" }
+  btn.classList.add("deleting");btn.textContent="…";
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${id}`,{
+      method:"DELETE",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Prefer:"return=minimal"}
     });
-    if (!res.ok) { const b = await res.text().catch(()=>""); alert(`Delete failed: ${res.status} — ${b}`); btn.classList.remove("deleting"); btn.innerHTML = trashSVG()+" Delete"; return; }
-    allLogs = allLogs.filter(l => l.id !== id);
-    li.style.transition = "opacity 0.18s, transform 0.18s";
-    li.style.opacity = "0"; li.style.transform = "translateX(6px)";
-    setTimeout(() => {
+    if(!res.ok){const b=await res.text().catch(()=>"");alert(`Delete failed: ${res.status} — ${b}`);btn.classList.remove("deleting");btn.innerHTML=trashSVG()+" Delete";return;}
+    allLogs=allLogs.filter(l=>l.id!==id);
+    li.style.transition="opacity 0.18s,transform 0.18s";li.style.opacity="0";li.style.transform="translateX(6px)";
+    setTimeout(()=>{
       li.remove();
-      const rem = $("detailList").querySelectorAll("li").length;
-      $("detailCount").textContent = `${rem} event${rem!==1?"s":""}`;
-      if (rem === 0) closeDetail();
-      renderCalendar(); renderStats();
-    }, 180);
-  } catch(e) { alert("Network error: " + e.message); btn.classList.remove("deleting"); btn.innerHTML = trashSVG()+" Delete"; }
+      const rem=$("detailList").querySelectorAll("li").length;
+      $("detailCount").textContent=`${rem} event${rem!==1?"s":""}`;
+      if(rem===0) closeDetail();
+      renderCalendar();renderStats();
+    },180);
+  }catch(e){alert("Network error: "+e.message);btn.classList.remove("deleting");btn.innerHTML=trashSVG()+" Delete";}
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
-function renderAll() { renderMonthLabel(); renderStats(); renderCalendar(); }
-function renderMonthLabel() { $("monthLabel").textContent = `${MONTHS[viewMonth]} ${viewYear}`; }
-function renderStats() {
-  const ml = allLogs.filter(l => l._date.getFullYear()===viewYear && l._date.getMonth()===viewMonth);
-  $("stat-days").textContent  = new Set(ml.map(l=>dateKey(l._date))).size;
-  $("stat-in").textContent    = ml.filter(l=>l[TYPE_COL]==="IN").length;
-  $("stat-out").textContent   = ml.filter(l=>l[TYPE_COL]==="OUT").length;
-  $("stat-total").textContent = ml.length;
+function renderAll(){renderMonthLabel();renderStats();renderCalendar();}
+function renderMonthLabel(){$("monthLabel").textContent=`${MONTHS[viewMonth]} ${viewYear}`;}
+function renderStats(){
+  const ml=allLogs.filter(l=>l._date.getFullYear()===viewYear&&l._date.getMonth()===viewMonth);
+  $("stat-days").textContent  =new Set(ml.map(l=>dateKey(l._date))).size;
+  $("stat-in").textContent    =ml.filter(l=>l[TYPE_COL]==="IN").length;
+  $("stat-out").textContent   =ml.filter(l=>l[TYPE_COL]==="OUT").length;
+  $("stat-total").textContent =ml.length;
 }
-
-function renderCalendar() {
-  const grid = $("calGrid"); grid.innerHTML = "";
-  const todayKey    = dateKey(new Date());
-  const monthLogs   = allLogs.filter(l=>l._date.getFullYear()===viewYear && l._date.getMonth()===viewMonth);
-  const dayMap      = buildDayMap(monthLogs);
-  const firstDay    = new Date(viewYear, viewMonth, 1).getDay();
-  const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
-  const daysInPrev  = new Date(viewYear, viewMonth, 0).getDate();
-  const totalCells  = Math.ceil((firstDay+daysInMonth)/7)*7;
-
-  for (let i = 0; i < totalCells; i++) {
-    let day, month, year, other = false;
-    if (i < firstDay) {
-      day=daysInPrev-firstDay+1+i; month=viewMonth===0?11:viewMonth-1; year=viewMonth===0?viewYear-1:viewYear; other=true;
-    } else if (i >= firstDay+daysInMonth) {
-      day=i-firstDay-daysInMonth+1; month=viewMonth===11?0:viewMonth+1; year=viewMonth===11?viewYear+1:viewYear; other=true;
-    } else { day=i-firstDay+1; month=viewMonth; year=viewYear; }
-
-    const cellDate = new Date(year, month, day);
-    const key  = dateKey(cellDate);
-    const logs = other ? [] : (dayMap[key]||[]);
-    const isToday = key === todayKey;
-
-    const cell = document.createElement("div");
-    cell.className = ["cal-cell",other?"other-month":"",isToday?"today":"",logs.length?"has-data":""].filter(Boolean).join(" ");
-
-    const dn = document.createElement("div"); dn.className="day-num"; dn.textContent=day; cell.appendChild(dn);
-
-    if (logs.length) {
-      const ev = document.createElement("div"); ev.className="cell-events";
-      logs.slice(0,2).forEach(l => {
-        const isIn=l[TYPE_COL]==="IN"; const p=document.createElement("div");
+function renderCalendar(){
+  const grid=$("calGrid");grid.innerHTML="";
+  const todayKey=dateKey(new Date());
+  const monthLogs=allLogs.filter(l=>l._date.getFullYear()===viewYear&&l._date.getMonth()===viewMonth);
+  const dayMap=buildDayMap(monthLogs);
+  const firstDay=new Date(viewYear,viewMonth,1).getDay();
+  const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+  const daysInPrev=new Date(viewYear,viewMonth,0).getDate();
+  const totalCells=Math.ceil((firstDay+daysInMonth)/7)*7;
+  for(let i=0;i<totalCells;i++){
+    let day,month,year,other=false;
+    if(i<firstDay){day=daysInPrev-firstDay+1+i;month=viewMonth===0?11:viewMonth-1;year=viewMonth===0?viewYear-1:viewYear;other=true;}
+    else if(i>=firstDay+daysInMonth){day=i-firstDay-daysInMonth+1;month=viewMonth===11?0:viewMonth+1;year=viewMonth===11?viewYear+1:viewYear;other=true;}
+    else{day=i-firstDay+1;month=viewMonth;year=viewYear;}
+    const cellDate=new Date(year,month,day);
+    const key=dateKey(cellDate);
+    const logs=other?[]:(dayMap[key]||[]);
+    const isToday=key===todayKey;
+    const cell=document.createElement("div");
+    cell.className=["cal-cell",other?"other-month":"",isToday?"today":"",logs.length?"has-data":""].filter(Boolean).join(" ");
+    const dn=document.createElement("div");dn.className="day-num";dn.textContent=day;cell.appendChild(dn);
+    if(logs.length){
+      const ev=document.createElement("div");ev.className="cell-events";
+      logs.slice(0,2).forEach(l=>{
+        const isIn=l[TYPE_COL]==="IN";const p=document.createElement("div");
         p.className="cell-pill "+(isIn?"in":"out");
         p.innerHTML=`<div class="cell-pill-dot"></div><span class="pill-text">${isIn?"In":"Out"} ${formatTime(l._date)}</span>`;
         ev.appendChild(p);
       });
-      if (logs.length>2) { const m=document.createElement("div"); m.className="cell-more"; m.textContent=`+${logs.length-2}`; ev.appendChild(m); }
+      if(logs.length>2){const m=document.createElement("div");m.className="cell-more";m.textContent=`+${logs.length-2}`;ev.appendChild(m);}
       cell.appendChild(ev);
-      cell.addEventListener("click", () => {
-        if (selectedCell) selectedCell.classList.remove("selected");
-        selectedCell=cell; cell.classList.add("selected");
-        showDetail(cellDate, logs);
+      cell.addEventListener("click",()=>{
+        if(selectedCell)selectedCell.classList.remove("selected");
+        selectedCell=cell;cell.classList.add("selected");
+        showDetail(cellDate,logs);
       });
     }
     grid.appendChild(cell);
   }
 }
-
-function showDetail(date, logs) {
-  $("detailDate").textContent  = formatFullDate(date);
-  $("detailCount").textContent = `${logs.length} event${logs.length!==1?"s":""}`;
-  refreshUnlockBtn();
-  const list = $("detailList"); list.innerHTML = "";
-  [...logs].sort((a,b)=>a._date-b._date).forEach(log => {
-    const isIn = log[TYPE_COL]==="IN";
-    const li   = document.createElement("li"); li.className="detail-item "+(isIn?"in":"out");
-    const btn  = document.createElement("button"); btn.className="delete-btn" + (adminUnlocked ? "" : " locked");
-    btn.innerHTML = trashSVG()+" Delete";
-    btn.addEventListener("click", e => { e.stopPropagation(); deleteLog(log.id, btn, li); });
-    li.innerHTML = `<div class="detail-dot"></div><div class="detail-info"><div class="detail-type">${isIn?"Check In":"Check Out"}</div><div class="detail-time">${formatTime(log._date)}</div></div>`;
-    li.appendChild(btn);
-    list.appendChild(li);
+function showDetail(date,logs){
+  $("detailDate").textContent=formatFullDate(date);
+  $("detailCount").textContent=`${logs.length} event${logs.length!==1?"s":""}`;
+  const list=$("detailList");list.innerHTML="";
+  [...logs].sort((a,b)=>a._date-b._date).forEach(log=>{
+    const isIn=log[TYPE_COL]==="IN";
+    const li=document.createElement("li");li.className="detail-item "+(isIn?"in":"out");
+    const btn=document.createElement("button");
+    btn.className="delete-btn"+(adminUnlocked?"":" locked");
+    btn.innerHTML=trashSVG()+" Delete";
+    btn.addEventListener("click",e=>{e.stopPropagation();deleteLog(log.id,btn,li);});
+    li.innerHTML=`<div class="detail-dot"></div><div class="detail-info"><div class="detail-type">${isIn?"Check In":"Check Out"}</div><div class="detail-time">${formatTime(log._date)}</div></div>`;
+    li.appendChild(btn);list.appendChild(li);
   });
-  const panel = $("detailPanel"); panel.classList.add("visible");
-  panel.scrollIntoView({behavior:"smooth", block:"nearest"});
+  const panel=$("detailPanel");panel.classList.add("visible");
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
-
-function closeDetail() {
+function closeDetail(){
   $("detailPanel").classList.remove("visible");
-  if (selectedCell) { selectedCell.classList.remove("selected"); selectedCell=null; }
+  if(selectedCell){selectedCell.classList.remove("selected");selectedCell=null;}
 }
 
-$("prevMonth").addEventListener("click", () => { if(viewMonth===0){viewMonth=11;viewYear--;}else viewMonth--; closeDetail(); renderAll(); });
-$("nextMonth").addEventListener("click", () => { if(viewMonth===11){viewMonth=0;viewYear++;}else viewMonth++; closeDetail(); renderAll(); });
-$("detailClose").addEventListener("click", closeDetail);
+$("prevMonth").addEventListener("click",()=>{if(viewMonth===0){viewMonth=11;viewYear--;}else viewMonth--;closeDetail();renderAll();});
+$("nextMonth").addEventListener("click",()=>{if(viewMonth===11){viewMonth=0;viewYear++;}else viewMonth++;closeDetail();renderAll();});
+$("detailClose").addEventListener("click",closeDetail);
 
 loadData();
 </script>
