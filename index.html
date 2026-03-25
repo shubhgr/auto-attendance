@@ -52,7 +52,6 @@
     .empty-state .empty-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.4; }
     .empty-state p { font-size: 13px; }
 
-    /* ── Overlay base ── */
     .overlay {
       position: fixed; inset: 0; z-index: 100;
       background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
@@ -60,7 +59,6 @@
     }
     .overlay.visible { display: flex; }
 
-    /* ── PIN Modal ── */
     .pin-modal {
       background: var(--surface); border: 1px solid var(--border2);
       border-radius: 16px; padding: 28px 28px 24px; width: 320px;
@@ -84,7 +82,6 @@
     .pin-cancel { width: 100%; background: none; border: none; color: var(--text3); font-size: 12px; font-family: inherit; cursor: pointer; padding: 6px; margin-top: 2px; border-radius: 8px; transition: color 0.1s; }
     .pin-cancel:hover { color: var(--text2); }
 
-    /* ── Add Log Modal ── */
     .add-modal {
       background: var(--surface); border: 1px solid var(--border2);
       border-radius: 16px; padding: 24px; width: 360px;
@@ -125,7 +122,6 @@
     .add-msg.ok  { color: var(--in); }
     .add-msg.err { color: var(--out); }
 
-    /* ── Leave Manager Modal ── */
     .leave-modal {
       background: var(--surface); border: 1px solid var(--border2);
       border-radius: 16px; padding: 24px; width: 380px; max-height: 90vh; overflow-y: auto;
@@ -137,7 +133,6 @@
 
     .leave-section-title { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
 
-    /* Weekly repeating days */
     .weekday-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 18px; }
     .wd-btn {
       background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
@@ -147,7 +142,6 @@
     .wd-btn:hover { border-color: var(--border2); color: var(--text2); }
     .wd-btn.active { background: var(--leave-bg); border-color: var(--leave-border); color: var(--leave); }
 
-    /* Specific date leave */
     .leave-date-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .leave-date-row .form-input { flex: 1; }
     .leave-date-row .form-input[type="text"] { flex: 1.5; }
@@ -171,10 +165,8 @@
     .leave-save-btn { width: 100%; background: var(--text); color: var(--bg); border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
     .leave-save-btn:hover { opacity: 0.88; }
 
-    /* ── App ── */
     #app { max-width: 860px; margin: 0 auto; display: none; }
 
-    /* ── Header ── */
     .header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
     .header-left h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.04em; color: var(--text); }
     .header-left p  { font-size: 12px; color: var(--text3); margin-top: 3px; }
@@ -189,7 +181,6 @@
     .month-nav button:hover { background: var(--surface2); color: var(--text); }
     .month-nav .month-label { font-size: 13px; font-weight: 500; color: var(--text); min-width: 118px; text-align: center; letter-spacing: -0.01em; }
 
-    /* ── Admin strip ── */
     .admin-strip { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 9px 14px; margin-bottom: 14px; font-size: 12px; border: 1px solid var(--border); background: var(--surface); transition: background 0.25s, border-color 0.25s; }
     .admin-strip.unlocked { background: #13130a; border-color: #2a2a10; }
 
@@ -209,8 +200,8 @@
     .strip-action.leave-btn:hover { background: var(--leave-bg); color: var(--leave); }
     .admin-strip.unlocked .strip-action.leave-btn { color: #a89a30; border-color: #2a2a10; }
     .admin-strip.unlocked .strip-action.leave-btn:hover { background: #1a1a00; color: var(--leave); border-color: var(--leave-border); }
+    .strip-action.hidden { display: none; }
 
-    /* ── Stats ── */
     .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
     .stat-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
@@ -219,7 +210,6 @@
     .stat-value.red    { color: var(--out); }
     .stat-value.yellow { color: var(--leave); }
 
-    /* ── Calendar ── */
     .cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
     .cal-head { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); }
     .cal-head-cell { text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
@@ -246,7 +236,6 @@
     .cell-pill-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
     .cell-more { font-size: 9px; color: var(--text3); padding-left: 2px; margin-top: 1px; }
 
-    /* ── Detail panel ── */
     .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; }
     .detail-panel.visible { display: block; }
     .detail-header { padding: 13px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
@@ -297,7 +286,6 @@
 </head>
 <body>
 
-<!-- PIN Overlay -->
 <div class="overlay" id="pinOverlay">
   <div class="pin-modal">
     <div class="pin-modal-header">
@@ -329,7 +317,6 @@
   </div>
 </div>
 
-<!-- Add Log Overlay -->
 <div class="overlay" id="addOverlay">
   <div class="add-modal">
     <div class="add-modal-header">
@@ -356,7 +343,6 @@
   </div>
 </div>
 
-<!-- Leave Manager Overlay -->
 <div class="overlay" id="leaveOverlay">
   <div class="leave-modal">
     <div class="leave-modal-header">
@@ -462,127 +448,224 @@
 </div>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────────────
 const SUPABASE_URL = "https://kpansofmofolnnfnwlml.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYW5zb2Ztb2ZvbG5uZm53bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzU3ODksImV4cCI6MjA4ODExMTc4OX0.v_TSJONVfpvxuGQnK6O2S9ZXEpRNdfeOvXELeN_yYW0";
-const TABLE    = "office_logs";
+const TABLE = "office_logs";
 const TIME_COL = "event_time";
 const TYPE_COL = "event_type";
-const ADMIN_PIN = "2281"; // ← change this
-// ─────────────────────────────────────────────────────────────────────────────
+const ADMIN_PIN = "2281";
 
-// ── Leave settings storage ────────────────────────────────────────────────────
-// Stored in localStorage so they persist across sessions
 function loadLeaveSettings() {
   try {
     const s = localStorage.getItem("attendance_leave_settings");
-    if (s) return JSON.parse(s);
-  } catch(e) {}
-  return { weekdays: [], dates: [] }; // default: no leave days
+    if (s) {
+      const parsed = JSON.parse(s);
+      return { weekdays: Array.isArray(parsed.weekdays) ? parsed.weekdays : [] };
+    }
+  } catch (e) {}
+  return { weekdays: [] };
 }
+
 function saveLeaveSettingsToStorage(settings) {
-  localStorage.setItem("attendance_leave_settings", JSON.stringify(settings));
+  localStorage.setItem("attendance_leave_settings", JSON.stringify({ weekdays: settings.weekdays }));
 }
+
 let leaveSettings = loadLeaveSettings();
-// leaveSettings.weekdays = array of 0-6 (Sun=0)
-// leaveSettings.dates = array of { date: "YYYY-MM-DD", label: "..." }
+let leaveRecords = [];
+
+function getSpecificLeaveRecord(dateStr) {
+  return leaveRecords.find((item) => item.date === dateStr) || null;
+}
 
 function isLeaveDay(dateObj) {
   const wd = dateObj.getDay();
   if (leaveSettings.weekdays.includes(wd)) return true;
-  const k = dateKey(dateObj);
-  return leaveSettings.dates.some(d => d.date === k);
+  return !!getSpecificLeaveRecord(dateKey(dateObj));
 }
+
 function getLeaveDateLabel(dateStr) {
-  const found = leaveSettings.dates.find(d => d.date === dateStr);
+  const found = getSpecificLeaveRecord(dateStr);
   return found ? found.label : "";
 }
 
-// ── State ─────────────────────────────────────────────────────────────────────
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const DAYS_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-let allLogs = [], viewYear, viewMonth, selectedCell = null;
+let allLogs = [], allRows = [], viewYear, viewMonth, selectedCell = null;
 let adminUnlocked = false;
 let pinBuffer = "", pinResolve = null;
 let selectedAddType = "IN";
 let detailCurrentDate = null;
 
-// ── Utils ─────────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const pad = n => String(n).padStart(2,"0");
-function dateKey(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(2, "0");
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 function formatTime(d) {
   let h = d.getHours(), m = d.getMinutes(), ap = h >= 12 ? "PM" : "AM";
-  if (h > 12) h -= 12; if (h === 0) h = 12;
+  if (h > 12) h -= 12;
+  if (h === 0) h = 12;
   return `${pad(h)}:${pad(m)} ${ap}`;
 }
-function formatFullDate(d) { return `${DAYS_SHORT[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`; }
-function buildDayMap(logs) { const map = {}; logs.forEach(l => { const k = dateKey(l._date); (map[k]=map[k]||[]).push(l); }); return map; }
+
+function formatFullDate(d) {
+  return `${DAYS_SHORT[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function buildDayMap(logs) {
+  const map = {};
+  logs.forEach((l) => {
+    const k = dateKey(l._date);
+    (map[k] = map[k] || []).push(l);
+  });
+  return map;
+}
 
 function showError(msg, detail) {
-  $("loading").style.display="none"; $("app").style.display="none"; $("emptyState").style.display="none";
+  $("loading").style.display = "none";
+  $("app").style.display = "none";
+  $("emptyState").style.display = "none";
   $("errorMsg").textContent = msg;
-  const dc = $("errorDetail"); dc.textContent=detail||""; dc.style.display=detail?"block":"none";
-  $("errorBox").style.display="block";
+  const dc = $("errorDetail");
+  dc.textContent = detail || "";
+  dc.style.display = detail ? "block" : "none";
+  $("errorBox").style.display = "block";
 }
 
-// ── PIN ───────────────────────────────────────────────────────────────────────
 function updatePinDots() {
-  for (let i=0;i<4;i++) { const d=$(`pd${i}`); d.classList.remove("filled","error"); if(i<pinBuffer.length) d.classList.add("filled"); }
+  for (let i = 0; i < 4; i++) {
+    const d = $(`pd${i}`);
+    d.classList.remove("filled", "error");
+    if (i < pinBuffer.length) d.classList.add("filled");
+  }
 }
+
 function flashPinError(msg) {
-  $("pinError").textContent=msg;
-  for (let i=0;i<4;i++){const d=$(`pd${i}`);d.classList.remove("filled");d.classList.add("error");}
-  const dots=$("pinDots"); dots.classList.add("shake");
-  setTimeout(()=>{ dots.classList.remove("shake"); for(let i=0;i<4;i++) $(`pd${i}`).classList.remove("error"); $("pinError").textContent=""; pinBuffer=""; updatePinDots(); },600);
+  $("pinError").textContent = msg;
+  for (let i = 0; i < 4; i++) {
+    const d = $(`pd${i}`);
+    d.classList.remove("filled");
+    d.classList.add("error");
+  }
+  const dots = $("pinDots");
+  dots.classList.add("shake");
+  setTimeout(() => {
+    dots.classList.remove("shake");
+    for (let i = 0; i < 4; i++) $("pd" + i).classList.remove("error");
+    $("pinError").textContent = "";
+    pinBuffer = "";
+    updatePinDots();
+  }, 600);
 }
-function openPinModal() { return new Promise(resolve => { pinResolve=resolve; pinBuffer=""; $("pinError").textContent=""; updatePinDots(); $("pinOverlay").classList.add("visible"); }); }
-function closePinModal(ok) { $("pinOverlay").classList.remove("visible"); if(pinResolve){pinResolve(ok);pinResolve=null;} }
 
-$("pinKeypad").addEventListener("click",e=>{
-  const btn=e.target.closest(".pin-key"); if(!btn) return;
-  const k=btn.dataset.k;
-  if(k==="del"){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();return;}
-  if(pinBuffer.length>=4) return;
-  pinBuffer+=k; updatePinDots();
-  if(pinBuffer.length===4){ if(pinBuffer===ADMIN_PIN) closePinModal(true); else flashPinError("Incorrect PIN"); }
-});
-document.addEventListener("keydown",e=>{
-  if($("addOverlay").classList.contains("visible") || $("leaveOverlay").classList.contains("visible")) return;
-  if(!$("pinOverlay").classList.contains("visible")) return;
-  if(e.key>="0"&&e.key<="9"){ if(pinBuffer.length<4){pinBuffer+=e.key;updatePinDots();} if(pinBuffer.length===4){if(pinBuffer===ADMIN_PIN)closePinModal(true);else flashPinError("Incorrect PIN");} }
-  else if(e.key==="Backspace"){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();}
-  else if(e.key==="Escape"){closePinModal(false);}
-});
-$("pinCancel").addEventListener("click",()=>closePinModal(false));
-$("pinOverlay").addEventListener("click",e=>{if(e.target===$("pinOverlay"))closePinModal(false);});
+function openPinModal() {
+  return new Promise((resolve) => {
+    pinResolve = resolve;
+    pinBuffer = "";
+    $("pinError").textContent = "";
+    updatePinDots();
+    $("pinOverlay").classList.add("visible");
+  });
+}
 
-// ── Admin strip ───────────────────────────────────────────────────────────────
+function closePinModal(ok) {
+  $("pinOverlay").classList.remove("visible");
+  if (pinResolve) {
+    pinResolve(ok);
+    pinResolve = null;
+  }
+}
+
+$("pinKeypad").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pin-key");
+  if (!btn) return;
+  const k = btn.dataset.k;
+  if (k === "del") {
+    pinBuffer = pinBuffer.slice(0, -1);
+    updatePinDots();
+    return;
+  }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += k;
+  updatePinDots();
+  if (pinBuffer.length === 4) {
+    if (pinBuffer === ADMIN_PIN) closePinModal(true);
+    else flashPinError("Incorrect PIN");
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if ($("addOverlay").classList.contains("visible") || $("leaveOverlay").classList.contains("visible")) return;
+  if (!$("pinOverlay").classList.contains("visible")) return;
+  if (e.key >= "0" && e.key <= "9") {
+    if (pinBuffer.length < 4) {
+      pinBuffer += e.key;
+      updatePinDots();
+    }
+    if (pinBuffer.length === 4) {
+      if (pinBuffer === ADMIN_PIN) closePinModal(true);
+      else flashPinError("Incorrect PIN");
+    }
+  } else if (e.key === "Backspace") {
+    pinBuffer = pinBuffer.slice(0, -1);
+    updatePinDots();
+  } else if (e.key === "Escape") {
+    closePinModal(false);
+  }
+});
+
+$("pinCancel").addEventListener("click", () => closePinModal(false));
+$("pinOverlay").addEventListener("click", (e) => {
+  if (e.target === $("pinOverlay")) closePinModal(false);
+});
+
 function updateStrip() {
-  const strip=$("adminStrip"), label=$("stripLabel"), btn=$("stripBtn");
-  if(adminUnlocked){
+  const strip = $("adminStrip"), label = $("stripLabel"), btn = $("stripBtn");
+  const leaveBtn = $("leaveBtn");
+  if (adminUnlocked) {
     strip.classList.add("unlocked");
-    label.textContent="🔓 Admin mode — add & delete records unlocked";
-    btn.textContent="Lock";
+    label.textContent = "🔓 Admin mode — add & delete records unlocked";
+    btn.textContent = "Lock";
+    leaveBtn.classList.remove("hidden");
   } else {
     strip.classList.remove("unlocked");
-    label.textContent="🔒 Locked — unlock to add or delete records";
-    btn.textContent="Unlock";
+    label.textContent = "🔒 Locked — unlock to add or delete records";
+    btn.textContent = "Unlock";
+    leaveBtn.classList.add("hidden");
   }
-  document.querySelectorAll(".delete-btn").forEach(b=>{ adminUnlocked ? b.classList.remove("locked") : b.classList.add("locked"); });
-  const dab=$("detailAddBtn"); dab && (adminUnlocked ? dab.classList.remove("locked") : dab.classList.add("locked"));
+  document.querySelectorAll(".delete-btn").forEach((b) => {
+    if (adminUnlocked) b.classList.remove("locked");
+    else b.classList.add("locked");
+  });
+  const dab = $("detailAddBtn");
+  if (dab) {
+    if (adminUnlocked) dab.classList.remove("locked");
+    else dab.classList.add("locked");
+  }
 }
 
-$("stripBtn").addEventListener("click",async()=>{
-  if(adminUnlocked){adminUnlocked=false;updateStrip();}
-  else{const ok=await openPinModal();if(ok){adminUnlocked=true;updateStrip();}}
+$("stripBtn").addEventListener("click", async () => {
+  if (adminUnlocked) {
+    adminUnlocked = false;
+    updateStrip();
+  } else {
+    const ok = await openPinModal();
+    if (ok) {
+      adminUnlocked = true;
+      updateStrip();
+    }
+  }
 });
 
-// ── Leave Day Manager ─────────────────────────────────────────────────────────
-let tempLeave = null; // working copy while modal is open
+let tempLeave = null;
 
 function openLeaveModal() {
-  tempLeave = JSON.parse(JSON.stringify(leaveSettings));
+  tempLeave = {
+    weekdays: [...leaveSettings.weekdays],
+    dates: leaveRecords.map((item) => ({ id: item.id, date: item.date, label: item.label || "" }))
+  };
   renderWeekdayGrid();
   renderLeaveList();
   $("leaveDateInput").value = "";
@@ -591,242 +674,439 @@ function openLeaveModal() {
 }
 
 $("leaveBtn").addEventListener("click", openLeaveModal);
-$("leaveClose").addEventListener("click", ()=>{ $("leaveOverlay").classList.remove("visible"); tempLeave=null; });
-$("leaveOverlay").addEventListener("click",e=>{ if(e.target===$("leaveOverlay")){ $("leaveOverlay").classList.remove("visible"); tempLeave=null; } });
+$("leaveClose").addEventListener("click", () => {
+  $("leaveOverlay").classList.remove("visible");
+  tempLeave = null;
+});
+$("leaveOverlay").addEventListener("click", (e) => {
+  if (e.target === $("leaveOverlay")) {
+    $("leaveOverlay").classList.remove("visible");
+    tempLeave = null;
+  }
+});
 
 function renderWeekdayGrid() {
-  document.querySelectorAll(".wd-btn").forEach(btn=>{
-    const wd = parseInt(btn.dataset.wd);
+  document.querySelectorAll(".wd-btn").forEach((btn) => {
+    const wd = parseInt(btn.dataset.wd, 10);
     btn.classList.toggle("active", tempLeave.weekdays.includes(wd));
     btn.onclick = () => {
       const idx = tempLeave.weekdays.indexOf(wd);
-      if(idx>=0) tempLeave.weekdays.splice(idx,1); else tempLeave.weekdays.push(wd);
+      if (idx >= 0) tempLeave.weekdays.splice(idx, 1);
+      else tempLeave.weekdays.push(wd);
       renderWeekdayGrid();
     };
   });
 }
 
 function renderLeaveList() {
-  const list = $("leaveList"); list.innerHTML="";
-  if(!tempLeave.dates.length){ list.innerHTML=`<div class="leave-empty">No specific dates added</div>`; return; }
-  tempLeave.dates.sort((a,b)=>a.date.localeCompare(b.date)).forEach((item,idx)=>{
-    const d = new Date(item.date+"T12:00:00");
-    const li=document.createElement("li"); li.className="leave-item";
-    li.innerHTML=`<div class="leave-item-dot"></div><div class="leave-item-info"><div class="leave-item-date">${item.date}</div>${item.label?`<div class="leave-item-label">${item.label}</div>`:""}</div><button class="leave-item-del" data-idx="${idx}">×</button>`;
+  const list = $("leaveList");
+  list.innerHTML = "";
+  if (!tempLeave.dates.length) {
+    list.innerHTML = '<div class="leave-empty">No specific dates added</div>';
+    return;
+  }
+  tempLeave.dates.sort((a, b) => a.date.localeCompare(b.date)).forEach((item, idx) => {
+    const li = document.createElement("li");
+    li.className = "leave-item";
+    li.innerHTML = `<div class="leave-item-dot"></div><div class="leave-item-info"><div class="leave-item-date">${item.date}</div>${item.label ? `<div class="leave-item-label">${item.label}</div>` : ""}</div><button class="leave-item-del" data-idx="${idx}">×</button>`;
     list.appendChild(li);
   });
-  list.querySelectorAll(".leave-item-del").forEach(btn=>{ btn.onclick=()=>{ tempLeave.dates.splice(parseInt(btn.dataset.idx),1); renderLeaveList(); }; });
+  list.querySelectorAll(".leave-item-del").forEach((btn) => {
+    btn.onclick = () => {
+      tempLeave.dates.splice(parseInt(btn.dataset.idx, 10), 1);
+      renderLeaveList();
+    };
+  });
 }
 
 function addSpecificLeave() {
-  const dateVal=$("leaveDateInput").value;
-  const labelVal=$("leaveLabelInput").value.trim();
-  if(!dateVal){alert("Please pick a date.");return;}
-  if(tempLeave.dates.some(d=>d.date===dateVal)){alert("This date is already added.");return;}
-  tempLeave.dates.push({date:dateVal, label:labelVal});
-  $("leaveDateInput").value=""; $("leaveLabelInput").value="";
+  const dateVal = $("leaveDateInput").value;
+  const labelVal = $("leaveLabelInput").value.trim();
+  if (!dateVal) {
+    alert("Please pick a date.");
+    return;
+  }
+  if (tempLeave.dates.some((d) => d.date === dateVal)) {
+    alert("This date is already added.");
+    return;
+  }
+  tempLeave.dates.push({ date: dateVal, label: labelVal });
+  $("leaveDateInput").value = "";
+  $("leaveLabelInput").value = "";
   renderLeaveList();
 }
 
 async function saveLeaveSettings() {
+  const nextWeekdays = [...tempLeave.weekdays].sort((a, b) => a - b);
+  const nextDates = [...tempLeave.dates].sort((a, b) => a.date.localeCompare(b.date));
+  const existingByDate = new Map(leaveRecords.map((item) => [item.date, item]));
+  const nextDateKeys = new Set(nextDates.map((item) => item.date));
+  const toInsert = nextDates.filter((item) => !existingByDate.has(item.date));
+  const toDelete = leaveRecords.filter((item) => !nextDateKeys.has(item.date));
 
-  leaveSettings = JSON.parse(JSON.stringify(tempLeave));
-  saveLeaveSettingsToStorage(leaveSettings);
+  try {
+    for (const item of toInsert) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          event_type: "LEAVE",
+          event_time: item.date + "T00:00:00"
+        })
+      });
+      if (!res.ok) throw new Error(`Insert failed: ${res.status}`);
+      const inserted = await res.json();
+      if (inserted && inserted[0]) {
+        allRows.push({ ...inserted[0], _date: new Date(inserted[0][TIME_COL]) });
+      }
+    }
 
-  // ⭐ SAVE SPECIFIC LEAVE TO DATABASE
-  for (const item of leaveSettings.dates) {
+    for (const item of toDelete) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${item.id}`, {
+        method: "DELETE",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          Prefer: "return=minimal"
+        }
+      });
+      if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+      allRows = allRows.filter((row) => row.id !== item.id);
+    }
 
-    await fetch(`${SUPABASE_URL}/rest/v1/office_logs`, {
-      method:"POST",
-      headers:{
-        apikey:SUPABASE_KEY,
-        Authorization:"Bearer "+SUPABASE_KEY,
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        event_type:"LEAVE",
-        event_time:item.date+"T00:00:00"
-      })
-    });
+    leaveSettings = { weekdays: nextWeekdays };
+    saveLeaveSettingsToStorage(leaveSettings);
+    syncDerivedData();
 
+    $("leaveOverlay").classList.remove("visible");
+    tempLeave = null;
+    renderAll();
+
+    if (detailCurrentDate) {
+      const detailKey = dateKey(detailCurrentDate);
+      const dayLogs = allLogs.filter((l) => dateKey(l._date) === detailKey);
+      showDetail(detailCurrentDate, dayLogs);
+    }
+  } catch (e) {
+    alert("Could not save leave settings: " + e.message);
   }
-
-  $("leaveOverlay").classList.remove("visible");
-  tempLeave=null;
-  renderAll();
-
 }
 
-// ── Add Log ───────────────────────────────────────────────────────────────────
 function selectType(t) {
   selectedAddType = t;
-  $("typeIn").className = "type-btn" + (t==="IN"?" active-in":"");
-  $("typeOut").className = "type-btn" + (t==="OUT"?" active-out":"");
+  $("typeIn").className = "type-btn" + (t === "IN" ? " active-in" : "");
+  $("typeOut").className = "type-btn" + (t === "OUT" ? " active-out" : "");
 }
 
 function openAddModal(prefillDate) {
-  $("addMsg").textContent=""; $("addMsg").className="add-msg";
+  $("addMsg").textContent = "";
+  $("addMsg").className = "add-msg";
   const now = new Date();
-  $("addDate").value = prefillDate || now.toISOString().slice(0,10);
+  $("addDate").value = prefillDate || now.toISOString().slice(0, 10);
   $("addTime").value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
   selectType("IN");
-  $("addSubmit").disabled=false;
+  $("addSubmit").disabled = false;
   $("addOverlay").classList.add("visible");
 }
 
-$("addClose").addEventListener("click",()=>$("addOverlay").classList.remove("visible"));
-$("addOverlay").addEventListener("click",e=>{ if(e.target===$("addOverlay")) $("addOverlay").classList.remove("visible"); });
+$("addClose").addEventListener("click", () => $("addOverlay").classList.remove("visible"));
+$("addOverlay").addEventListener("click", (e) => {
+  if (e.target === $("addOverlay")) $("addOverlay").classList.remove("visible");
+});
 
 async function submitLog() {
-  const dateVal=$("addDate").value, timeVal=$("addTime").value;
-  if(!dateVal||!timeVal){$("addMsg").textContent="Please fill date and time.";$("addMsg").className="add-msg err";return;}
+  const dateVal = $("addDate").value;
+  const timeVal = $("addTime").value;
+  if (!dateVal || !timeVal) {
+    $("addMsg").textContent = "Please fill date and time.";
+    $("addMsg").className = "add-msg err";
+    return;
+  }
   const isoStr = `${dateVal}T${timeVal}:00`;
   const eventDate = new Date(isoStr);
-  if(isNaN(eventDate)){$("addMsg").textContent="Invalid date/time.";$("addMsg").className="add-msg err";return;}
+  if (isNaN(eventDate)) {
+    $("addMsg").textContent = "Invalid date/time.";
+    $("addMsg").className = "add-msg err";
+    return;
+  }
 
-  $("addSubmit").disabled=true; $("addMsg").textContent="Saving…"; $("addMsg").className="add-msg";
+  $("addSubmit").disabled = true;
+  $("addMsg").textContent = "Saving…";
+  $("addMsg").className = "add-msg";
 
   try {
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`,{
-      method:"POST",
-      headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,"Content-Type":"application/json",Prefer:"return=representation"},
-      body:JSON.stringify({[TIME_COL]:eventDate.toISOString(),[TYPE_COL]:selectedAddType})
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
+      },
+      body: JSON.stringify({ [TIME_COL]: eventDate.toISOString(), [TYPE_COL]: selectedAddType })
     });
-    if(!res.ok){const b=await res.text().catch(()=>"");$("addMsg").textContent=`Error: ${res.status}`;$("addMsg").className="add-msg err";$("addSubmit").disabled=false;return;}
-    const inserted=await res.json();
-    if(inserted&&inserted[0]){
-      const newLog={...inserted[0],_date:new Date(inserted[0][TIME_COL])};
-      allLogs.push(newLog);
-      allLogs.sort((a,b)=>b._date-a._date);
+    if (!res.ok) {
+      $("addMsg").textContent = `Error: ${res.status}`;
+      $("addMsg").className = "add-msg err";
+      $("addSubmit").disabled = false;
+      return;
     }
-    $("addMsg").textContent="✓ Record added!"; $("addMsg").className="add-msg ok";
-    setTimeout(()=>{ $("addOverlay").classList.remove("visible"); renderAll(); refreshDetailIfOpen(dateVal); },800);
-  } catch(e){
-    $("addMsg").textContent="Network error: "+e.message; $("addMsg").className="add-msg err"; $("addSubmit").disabled=false;
+    const inserted = await res.json();
+    if (inserted && inserted[0]) {
+      const newLog = { ...inserted[0], _date: new Date(inserted[0][TIME_COL]) };
+      allRows.push(newLog);
+      syncDerivedData();
+    }
+    $("addMsg").textContent = "✓ Record added!";
+    $("addMsg").className = "add-msg ok";
+    setTimeout(() => {
+      $("addOverlay").classList.remove("visible");
+      renderAll();
+      refreshDetailIfOpen(dateVal);
+    }, 800);
+  } catch (e) {
+    $("addMsg").textContent = "Network error: " + e.message;
+    $("addMsg").className = "add-msg err";
+    $("addSubmit").disabled = false;
   }
 }
 
 function refreshDetailIfOpen(dateStr) {
-  if(!detailCurrentDate) return;
+  if (!detailCurrentDate) return;
   const k = dateKey(detailCurrentDate);
-  if(k===dateStr){ const dayLogs=allLogs.filter(l=>dateKey(l._date)===k); showDetail(detailCurrentDate,dayLogs); }
+  if (k === dateStr) {
+    const dayLogs = allLogs.filter((l) => dateKey(l._date) === k);
+    showDetail(detailCurrentDate, dayLogs);
+  }
 }
 
-// ── Load data ─────────────────────────────────────────────────────────────────
 async function loadData() {
-  $("errorBox").style.display="none"; $("app").style.display="none"; $("emptyState").style.display="none";
-  $("loading").style.display="flex";
+  $("errorBox").style.display = "none";
+  $("app").style.display = "none";
+  $("emptyState").style.display = "none";
+  $("loading").style.display = "flex";
   let res;
-  try { res=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?order=${TIME_COL}.desc&limit=5000`,{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}}); }
-  catch(e){showError("Network error — cannot reach Supabase.",e.message);return;}
-  if(!res.ok){const b=await res.text().catch(()=>"");showError(`HTTP ${res.status} — check RLS settings.`,b.slice(0,300));return;}
-  const data=await res.json().catch(e=>{showError("Parse error.",e.message);return null;});
-  if(!data||!Array.isArray(data)) return;
-  if(!data.length){$("loading").style.display="none";$("emptyState").style.display="block";return;}
-  allLogs=data.map(l=>({...l,_date:new Date(l[TIME_COL])})).filter(l=>!isNaN(l._date));
-  if(!allLogs.length){showError(`No valid dates in "${TIME_COL}".`);return;}
-  const latest=allLogs[0]._date;
-  viewYear=latest.getFullYear(); viewMonth=latest.getMonth();
-  $("loading").style.display="none"; $("app").style.display="block";
+  try {
+    res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?order=${TIME_COL}.desc&limit=5000`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    });
+  } catch (e) {
+    showError("Network error — cannot reach Supabase.", e.message);
+    return;
+  }
+  if (!res.ok) {
+    const b = await res.text().catch(() => "");
+    showError(`HTTP ${res.status} — check RLS settings.`, b.slice(0, 300));
+    return;
+  }
+  const data = await res.json().catch((e) => {
+    showError("Parse error.", e.message);
+    return null;
+  });
+  if (!data || !Array.isArray(data)) return;
+  if (!data.length) {
+    $("loading").style.display = "none";
+    $("emptyState").style.display = "block";
+    return;
+  }
+  allRows = data.map((l) => ({ ...l, _date: new Date(l[TIME_COL]) })).filter((l) => !isNaN(l._date));
+  syncDerivedData();
+  if (!allRows.length) {
+    showError(`No valid dates in "${TIME_COL}".`);
+    return;
+  }
+  const latest = allRows[0]._date;
+  viewYear = latest.getFullYear();
+  viewMonth = latest.getMonth();
+  $("loading").style.display = "none";
+  $("app").style.display = "block";
   renderAll();
 }
 
-// ── Delete ─────────────────────────────────────────────────────────────────────
-function trashSVG(){ return`<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 3h8M4 3V2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M4.5 5v3.5M6.5 5v3.5M2 3l.5 5.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`; }
+function syncDerivedData() {
+  allRows.sort((a, b) => b._date - a._date);
+  allLogs = allRows.filter((row) => row[TYPE_COL] !== "LEAVE");
+  const leaveMap = new Map();
+  allRows
+    .filter((row) => row[TYPE_COL] === "LEAVE")
+    .forEach((row) => {
+      const date = row._date.toISOString().slice(0, 10);
+      if (!leaveMap.has(date)) {
+        leaveMap.set(date, { id: row.id, date, label: "" });
+      }
+    });
+  leaveRecords = [...leaveMap.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
 
-async function deleteLog(id,btn,li) {
-  if(!adminUnlocked){const ok=await openPinModal();if(!ok)return;adminUnlocked=true;updateStrip();}
-  if(!btn.dataset.confirming){
-    btn.dataset.confirming="1";btn.classList.add("confirming");btn.innerHTML="Confirm?";
-    setTimeout(()=>{ if(btn.dataset.confirming){delete btn.dataset.confirming;btn.classList.remove("confirming");btn.innerHTML=trashSVG()+" Delete";} },3000);
+function trashSVG() {
+  return '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 3h8M4 3V2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M4.5 5v3.5M6.5 5v3.5M2 3l.5 5.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+async function deleteLog(id, btn, li) {
+  if (!adminUnlocked) {
+    const ok = await openPinModal();
+    if (!ok) return;
+    adminUnlocked = true;
+    updateStrip();
+  }
+  if (!btn.dataset.confirming) {
+    btn.dataset.confirming = "1";
+    btn.classList.add("confirming");
+    btn.innerHTML = "Confirm?";
+    setTimeout(() => {
+      if (btn.dataset.confirming) {
+        delete btn.dataset.confirming;
+        btn.classList.remove("confirming");
+        btn.innerHTML = trashSVG() + " Delete";
+      }
+    }, 3000);
     return;
   }
-  btn.classList.add("deleting");btn.textContent="…";
-  try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${id}`,{method:"DELETE",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Prefer:"return=minimal"}});
-    if(!res.ok){const b=await res.text().catch(()=>"");alert(`Delete failed: ${res.status} — ${b}`);btn.classList.remove("deleting");btn.innerHTML=trashSVG()+" Delete";return;}
-    allLogs=allLogs.filter(l=>l.id!==id);
-    li.style.transition="opacity 0.18s,transform 0.18s";li.style.opacity="0";li.style.transform="translateX(6px)";
-    setTimeout(()=>{
+  btn.classList.add("deleting");
+  btn.textContent = "…";
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${id}`, {
+      method: "DELETE",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY,
+        Prefer: "return=minimal"
+      }
+    });
+    if (!res.ok) {
+      const b = await res.text().catch(() => "");
+      alert(`Delete failed: ${res.status} — ${b}`);
+      btn.classList.remove("deleting");
+      btn.innerHTML = trashSVG() + " Delete";
+      return;
+    }
+    allRows = allRows.filter((l) => l.id !== id);
+    syncDerivedData();
+    li.style.transition = "opacity 0.18s,transform 0.18s";
+    li.style.opacity = "0";
+    li.style.transform = "translateX(6px)";
+    setTimeout(() => {
       li.remove();
-      const rem=$("detailList").querySelectorAll("li").length;
-      $("detailCount").textContent=`${rem} event${rem!==1?"s":""}`;
-      if(rem===0) closeDetail(); renderCalendar(); renderStats();
-    },180);
-  }catch(e){alert("Network error: "+e.message);btn.classList.remove("deleting");btn.innerHTML=trashSVG()+" Delete";}
-}
-
-// ── Render ─────────────────────────────────────────────────────────────────────
-function renderAll(){renderMonthLabel();renderStats();renderCalendar();}
-function renderMonthLabel(){$("monthLabel").textContent=`${MONTHS[viewMonth]} ${viewYear}`;}
-
-function renderStats(){
-  const ml=allLogs.filter(l=>l._date.getFullYear()===viewYear&&l._date.getMonth()===viewMonth);
-  $("stat-days").textContent  =new Set(ml.map(l=>dateKey(l._date))).size;
-  $("stat-in").textContent    =ml.filter(l=>l[TYPE_COL]==="IN").length;
-  $("stat-out").textContent   =ml.filter(l=>l[TYPE_COL]==="OUT").length;
-
-  // count leave days in this month
-  const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
-  let leaveDays=0;
-  for(let d=1;d<=daysInMonth;d++){
-    const dt=new Date(viewYear,viewMonth,d);
-    if(isLeaveDay(dt)) leaveDays++;
+      const rem = $("detailList").querySelectorAll("li").length;
+      $("detailCount").textContent = `${rem} event${rem !== 1 ? "s" : ""}`;
+      if (rem === 0) closeDetail();
+      renderCalendar();
+      renderStats();
+    }, 180);
+  } catch (e) {
+    alert("Network error: " + e.message);
+    btn.classList.remove("deleting");
+    btn.innerHTML = trashSVG() + " Delete";
   }
-  $("stat-leave").textContent=leaveDays;
 }
 
-function renderCalendar(){
-  const grid=$("calGrid");grid.innerHTML="";
-  const todayKey=dateKey(new Date());
-  const monthLogs=allLogs.filter(l=>l._date.getFullYear()===viewYear&&l._date.getMonth()===viewMonth);
-  const dayMap=buildDayMap(monthLogs);
-  const firstDay=new Date(viewYear,viewMonth,1).getDay();
-  const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
-  const daysInPrev=new Date(viewYear,viewMonth,0).getDate();
-  const totalCells=Math.ceil((firstDay+daysInMonth)/7)*7;
+function renderAll() {
+  renderMonthLabel();
+  renderStats();
+  renderCalendar();
+}
 
-  for(let i=0;i<totalCells;i++){
-    let day,month,year,other=false;
-    if(i<firstDay){day=daysInPrev-firstDay+1+i;month=viewMonth===0?11:viewMonth-1;year=viewMonth===0?viewYear-1:viewYear;other=true;}
-    else if(i>=firstDay+daysInMonth){day=i-firstDay-daysInMonth+1;month=viewMonth===11?0:viewMonth+1;year=viewMonth===11?viewYear+1:viewYear;other=true;}
-    else{day=i-firstDay+1;month=viewMonth;year=viewYear;}
+function renderMonthLabel() {
+  $("monthLabel").textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+}
 
-    const cellDate=new Date(year,month,day);
-    const key=dateKey(cellDate);
-    const logs=other?[]:(dayMap[key]||[]);
-    const isToday=key===todayKey;
-    const isLeave=!other&&isLeaveDay(cellDate);
-    const leaveLabel=isLeave?getLeaveDateLabel(key):"";
+function renderStats() {
+  const ml = allLogs.filter((l) => l._date.getFullYear() === viewYear && l._date.getMonth() === viewMonth);
+  $("stat-days").textContent = new Set(ml.map((l) => dateKey(l._date))).size;
+  $("stat-in").textContent = ml.filter((l) => l[TYPE_COL] === "IN").length;
+  $("stat-out").textContent = ml.filter((l) => l[TYPE_COL] === "OUT").length;
 
-    const cell=document.createElement("div");
-    cell.className=["cal-cell",other?"other-month":"",isToday?"today":"",isLeave&&!other?"is-leave":"",logs.length?"has-data":""].filter(Boolean).join(" ");
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  let leaveDays = 0;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(viewYear, viewMonth, d);
+    if (isLeaveDay(dt)) leaveDays++;
+  }
+  $("stat-leave").textContent = leaveDays;
+}
 
-    const dn=document.createElement("div");dn.className="day-num";dn.textContent=day;cell.appendChild(dn);
+function renderCalendar() {
+  const grid = $("calGrid");
+  grid.innerHTML = "";
+  const todayKey = dateKey(new Date());
+  const monthLogs = allLogs.filter((l) => l._date.getFullYear() === viewYear && l._date.getMonth() === viewMonth);
+  const dayMap = buildDayMap(monthLogs);
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const daysInPrev = new Date(viewYear, viewMonth, 0).getDate();
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
 
-    if(isLeave&&!other){
-      const lb=document.createElement("div");lb.className="leave-badge";
-      lb.textContent=leaveLabel||"Leave";cell.appendChild(lb);
+  for (let i = 0; i < totalCells; i++) {
+    let day, month, year, other = false;
+    if (i < firstDay) {
+      day = daysInPrev - firstDay + 1 + i;
+      month = viewMonth === 0 ? 11 : viewMonth - 1;
+      year = viewMonth === 0 ? viewYear - 1 : viewYear;
+      other = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - firstDay - daysInMonth + 1;
+      month = viewMonth === 11 ? 0 : viewMonth + 1;
+      year = viewMonth === 11 ? viewYear + 1 : viewYear;
+      other = true;
+    } else {
+      day = i - firstDay + 1;
+      month = viewMonth;
+      year = viewYear;
     }
 
-    if(logs.length){
-      const ev=document.createElement("div");ev.className="cell-events";
-      logs.slice(0,2).forEach(l=>{
-        const isIn=l[TYPE_COL]==="IN";const p=document.createElement("div");
-        p.className="cell-pill "+(isIn?"in":"out");
-        p.innerHTML=`<div class="cell-pill-dot"></div><span class="pill-text">${isIn?"In":"Out"} ${formatTime(l._date)}</span>`;
+    const cellDate = new Date(year, month, day);
+    const key = dateKey(cellDate);
+    const logs = other ? [] : (dayMap[key] || []);
+    const isToday = key === todayKey;
+    const isLeave = !other && isLeaveDay(cellDate);
+    const leaveLabel = isLeave ? getLeaveDateLabel(key) : "";
+
+    const cell = document.createElement("div");
+    cell.className = ["cal-cell", other ? "other-month" : "", isToday ? "today" : "", isLeave && !other ? "is-leave" : "", logs.length ? "has-data" : ""].filter(Boolean).join(" ");
+
+    const dn = document.createElement("div");
+    dn.className = "day-num";
+    dn.textContent = day;
+    cell.appendChild(dn);
+
+    if (isLeave && !other) {
+      const lb = document.createElement("div");
+      lb.className = "leave-badge";
+      lb.textContent = leaveLabel || "Leave";
+      cell.appendChild(lb);
+    }
+
+    if (logs.length) {
+      const ev = document.createElement("div");
+      ev.className = "cell-events";
+      logs.slice(0, 2).forEach((l) => {
+        const isIn = l[TYPE_COL] === "IN";
+        const p = document.createElement("div");
+        p.className = "cell-pill " + (isIn ? "in" : "out");
+        p.innerHTML = `<div class="cell-pill-dot"></div><span class="pill-text">${isIn ? "In" : "Out"} ${formatTime(l._date)}</span>`;
         ev.appendChild(p);
       });
-      if(logs.length>2){const m=document.createElement("div");m.className="cell-more";m.textContent=`+${logs.length-2}`;ev.appendChild(m);}
+      if (logs.length > 2) {
+        const m = document.createElement("div");
+        m.className = "cell-more";
+        m.textContent = `+${logs.length - 2}`;
+        ev.appendChild(m);
+      }
       cell.appendChild(ev);
     }
 
-    if(logs.length||(!other&&isLeave)){
+    if (logs.length || (!other && isLeave)) {
       cell.classList.add("has-data");
-      cell.addEventListener("click",()=>{
-        if(selectedCell)selectedCell.classList.remove("selected");
-        selectedCell=cell;cell.classList.add("selected");
-        showDetail(cellDate,logs);
+      cell.addEventListener("click", () => {
+        if (selectedCell) selectedCell.classList.remove("selected");
+        selectedCell = cell;
+        cell.classList.add("selected");
+        showDetail(cellDate, logs);
       });
     }
     grid.appendChild(cell);
@@ -834,54 +1114,90 @@ function renderCalendar(){
 }
 
 function showDetail(date, logs) {
-  detailCurrentDate=date;
-  const k=dateKey(date);
-  const isLeave=isLeaveDay(date);
-  $("detailDate").textContent=formatFullDate(date)+(isLeave?" — 🟡 Leave":"");
-  $("detailCount").textContent=`${logs.length} event${logs.length!==1?"s":""}`;
+  detailCurrentDate = date;
+  const k = dateKey(date);
+  const isLeave = isLeaveDay(date);
+  $("detailDate").textContent = formatFullDate(date) + (isLeave ? " — 🟡 Leave" : "");
+  $("detailCount").textContent = `${logs.length} event${logs.length !== 1 ? "s" : ""}`;
 
-  // Detail add button
-  const dab=$("detailAddBtn");
-  dab.onclick=async()=>{
-    if(!adminUnlocked){const ok=await openPinModal();if(!ok)return;adminUnlocked=true;updateStrip();}
+  const dab = $("detailAddBtn");
+  dab.onclick = async () => {
+    if (!adminUnlocked) {
+      const ok = await openPinModal();
+      if (!ok) return;
+      adminUnlocked = true;
+      updateStrip();
+    }
     openAddModal(k);
   };
 
-  const list=$("detailList");list.innerHTML="";
-  [...logs].sort((a,b)=>a._date-b._date).forEach(log=>{
-    const isIn=log[TYPE_COL]==="IN";
-    const li=document.createElement("li");li.className="detail-item "+(isIn?"in":"out");
-    const btn=document.createElement("button");
-    btn.className="delete-btn"+(adminUnlocked?"":" locked");
-    btn.innerHTML=trashSVG()+" Delete";
-    btn.addEventListener("click",e=>{e.stopPropagation();deleteLog(log.id,btn,li);});
-    li.innerHTML=`<div class="detail-dot"></div><div class="detail-info"><div class="detail-type">${isIn?"Check In":"Check Out"}</div><div class="detail-time">${formatTime(log._date)}</div></div>`;
-    li.appendChild(btn);list.appendChild(li);
+  const list = $("detailList");
+  list.innerHTML = "";
+  [...logs].sort((a, b) => a._date - b._date).forEach((log) => {
+    const isIn = log[TYPE_COL] === "IN";
+    const li = document.createElement("li");
+    li.className = "detail-item " + (isIn ? "in" : "out");
+    const btn = document.createElement("button");
+    btn.className = "delete-btn" + (adminUnlocked ? "" : " locked");
+    btn.innerHTML = trashSVG() + " Delete";
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteLog(log.id, btn, li);
+    });
+    li.innerHTML = `<div class="detail-dot"></div><div class="detail-info"><div class="detail-type">${isIn ? "Check In" : "Check Out"}</div><div class="detail-time">${formatTime(log._date)}</div></div>`;
+    li.appendChild(btn);
+    list.appendChild(li);
   });
 
-  if(!logs.length&&isLeave){
-    const li=document.createElement("li");li.style.cssText="padding:12px;font-size:12px;color:var(--leave);text-align:center;";
-    const label=getLeaveDateLabel(k);
-    li.textContent=label?`Leave: ${label}`:"Marked as leave day — no attendance records";
+  if (!logs.length && isLeave) {
+    const li = document.createElement("li");
+    li.style.cssText = "padding:12px;font-size:12px;color:var(--leave);text-align:center;";
+    const label = getLeaveDateLabel(k);
+    li.textContent = label ? `Leave: ${label}` : "Marked as leave day — no attendance records";
     list.appendChild(li);
   }
 
-  const panel=$("detailPanel");panel.classList.add("visible");
+  const panel = $("detailPanel");
+  panel.classList.add("visible");
   updateStrip();
-  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-function closeDetail(){
+function closeDetail() {
   $("detailPanel").classList.remove("visible");
-  detailCurrentDate=null;
-  if(selectedCell){selectedCell.classList.remove("selected");selectedCell=null;}
+  detailCurrentDate = null;
+  if (selectedCell) {
+    selectedCell.classList.remove("selected");
+    selectedCell = null;
+  }
 }
 
-$("prevMonth").addEventListener("click",()=>{ if(viewMonth===0){viewMonth=11;viewYear--;}else viewMonth--; closeDetail();renderAll(); });
-$("nextMonth").addEventListener("click",()=>{ if(viewMonth===11){viewMonth=0;viewYear++;}else viewMonth++; closeDetail();renderAll(); });
-$("detailClose").addEventListener("click",closeDetail);
+$("prevMonth").addEventListener("click", () => {
+  if (viewMonth === 0) {
+    viewMonth = 11;
+    viewYear--;
+  } else {
+    viewMonth--;
+  }
+  closeDetail();
+  renderAll();
+});
+
+$("nextMonth").addEventListener("click", () => {
+  if (viewMonth === 11) {
+    viewMonth = 0;
+    viewYear++;
+  } else {
+    viewMonth++;
+  }
+  closeDetail();
+  renderAll();
+});
+
+$("detailClose").addEventListener("click", closeDetail);
 
 loadData();
+updateStrip();
 </script>
 </body>
 </html>
