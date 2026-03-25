@@ -421,7 +421,7 @@
     <div class="strip-dot"></div>
     <span class="strip-label" id="stripLabel">🔒 Locked — unlock to add or delete records</span>
     <div class="strip-actions">
-      <button class="strip-action leave-btn" id="leaveBtn">📅 Leaves</button>
+      <button class="strip-action leave-btn" id="leaveBtn" style="display:none">📅 Leaves</button>
       <button class="strip-action" id="stripBtn">Unlock</button>
     </div>
   </div>
@@ -559,6 +559,8 @@ $("pinOverlay").addEventListener("click",e=>{if(e.target===$("pinOverlay"))close
 
 // ── Admin strip ───────────────────────────────────────────────────────────────
 function updateStrip() {
+  const leaveBtn = $("leaveBtn");
+leaveBtn.style.display = adminUnlocked ? "inline-flex" : "none";
   const strip=$("adminStrip"), label=$("stripLabel"), btn=$("stripBtn");
   if(adminUnlocked){
     strip.classList.add("unlocked");
@@ -590,7 +592,18 @@ function openLeaveModal() {
   $("leaveOverlay").classList.add("visible");
 }
 
-$("leaveBtn").addEventListener("click", openLeaveModal);
+$("leaveBtn").addEventListener("click", async () => {
+
+  if (!adminUnlocked) {
+    const ok = await openPinModal();
+    if (!ok) return;
+
+    adminUnlocked = true;
+    updateStrip();
+  }
+
+  openLeaveModal();
+});
 $("leaveClose").addEventListener("click", ()=>{ $("leaveOverlay").classList.remove("visible"); tempLeave=null; });
 $("leaveOverlay").addEventListener("click",e=>{ if(e.target===$("leaveOverlay")){ $("leaveOverlay").classList.remove("visible"); tempLeave=null; } });
 
