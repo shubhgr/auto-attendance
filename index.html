@@ -33,9 +33,12 @@
         --out: #f87171;
         --out-bg: #2b0d0d;
         --out-border: #4a1a1a;
-        --leave: #facc15;
-        --leave-bg: #1a1500;
-        --leave-border: #2a2300;
+      --leave: #facc15;
+      --leave-bg: #1a1500;
+      --leave-border: #2a2300;
+      --leave-recurring: #8c7b2a;
+      --leave-recurring-bg: #111005;
+      --leave-recurring-border: #1e1b0d;
         --wfh: #38bdf8;
         --wfh-bg: #071922;
         --wfh-border: #12364a;
@@ -1076,6 +1079,12 @@
       .cal-cell.is-leave .day-num {
         color: var(--leave);
       }
+      .cal-cell.is-leave-recurring {
+        background: var(--leave-recurring-bg);
+      }
+      .cal-cell.is-leave-recurring .day-num {
+        color: var(--leave-recurring);
+      }
       .cal-cell.is-wfh {
         background: var(--wfh-bg);
       }
@@ -1090,6 +1099,9 @@
       }
       .cal-cell.is-leave.has-data:hover {
         background: #1a1500;
+      }
+      .cal-cell.is-leave-recurring.has-data:hover {
+        background: #16140a;
       }
       .cal-cell.is-wfh.has-data:hover {
         background: #0b2230;
@@ -1110,6 +1122,11 @@
         padding: 1px 5px;
         display: inline-block;
         margin-bottom: 3px;
+      }
+      .leave-badge.recurring {
+        color: var(--leave-recurring);
+        background: rgba(140, 123, 42, 0.08);
+        border-color: var(--leave-recurring-border);
       }
       .wfh-badge {
         font-size: 9px;
@@ -1808,6 +1825,11 @@
         return found ? found.category || "" : "";
       }
 
+      function isRecurringLeaveDay(dateObj) {
+        const record = getSpecificLeaveRecord(dateKey(dateObj));
+        return isLeaveDay(dateObj) && (!record || !record.category);
+      }
+
       function getDayStatus(dateObj) {
         if (isLeaveDay(dateObj)) return "LEAVE";
         if (isWfhDay(dateObj)) return "WFH";
@@ -2001,11 +2023,11 @@
           btn = $("stripBtn");
         if (adminUnlocked) {
           strip.classList.add("unlocked");
-          label.textContent = "🔓 Admin mode — add & edit records unlocked";
+          label.textContent = "Admin mode - Unlocked";
           btn.textContent = "Lock";
         } else {
           strip.classList.remove("unlocked");
-          label.textContent = "🔒 Locked — unlock to add or edit records";
+          label.textContent = "Admin mode - Locked";
           btn.textContent = "Unlock";
         }
         document.querySelectorAll(".delete-btn").forEach((b) => {
@@ -2775,6 +2797,7 @@
           const dayStatus = !other ? getDayStatus(cellDate) : null;
           const isLeave = dayStatus === "LEAVE";
           const isWfh = dayStatus === "WFH";
+          const isRecurringLeave = isLeave && isRecurringLeaveDay(cellDate);
           const leaveCategory = isLeave ? getLeaveCategory(key) : "";
 
           const cell = document.createElement("div");
@@ -2783,6 +2806,7 @@
             other ? "other-month" : "",
             isToday ? "today" : "",
             isLeave ? "is-leave" : "",
+            isRecurringLeave ? "is-leave-recurring" : "",
             isWfh ? "is-wfh" : "",
             logs.length ? "has-data" : "",
           ]
@@ -2796,8 +2820,8 @@
 
           if (isLeave && !other) {
             const lb = document.createElement("div");
-            lb.className = "leave-badge";
-            lb.textContent = leaveCategory || "Leave";
+            lb.className = `leave-badge${isRecurringLeave ? " recurring" : ""}`;
+            lb.textContent = leaveCategory || "Weekly Off";
             cell.appendChild(lb);
           } else if (isWfh && !other) {
             const wb = document.createElement("div");
@@ -2900,8 +2924,8 @@
             li.textContent = category
               ? `${category}${label ? ` — ${label}` : ""}`
               : label
-                ? `Leave — ${label}`
-                : "Marked as leave day — no attendance records";
+                ? `Weekly Off — ${label}`
+                : "Weekly Off";
           } else {
             li.textContent = "Marked as WFH day — no attendance records";
           }
