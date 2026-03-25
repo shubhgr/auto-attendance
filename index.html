@@ -645,71 +645,45 @@ async function saveLeaveSettings() {
 
   try {
 
-    // ⭐ DELETE OLD LEAVE FIRST
-await fetch(`${SUPABASE_URL}/rest/v1/tasks?category=eq.leave`, {
-  method: "DELETE",
-  headers: {
-    apikey: SUPABASE_KEY,
-    Authorization: "Bearer " + SUPABASE_KEY
-  }
-});
-    // save specific leave dates
-    for (const item of tempLeave.dates) {
+    // save weekly leave
+    for (const wd of tempLeave.weekdays) {
 
-      await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/office_logs`, {
         method: "POST",
         headers: {
           apikey: SUPABASE_KEY,
           Authorization: "Bearer " + SUPABASE_KEY,
           "Content-Type": "application/json",
-          Prefer: "return=minimal"
+          "x-secret": "MY_SECRET_123"
         },
         body: JSON.stringify({
-          title: "Leave",
-          category: "leave",
-          status: "approved",
-          task_date: item.date,
-          raw_input: item.label || ""
+          event_type: "LEAVE",
+          event_time: `2000-01-0${wd+1}T00:00:00`
         })
       });
 
     }
 
+    // save specific leave
+    for (const item of tempLeave.dates) {
 
+      await fetch(`${SUPABASE_URL}/rest/v1/office_logs`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "x-secret": "MY_SECRET_123"
+        },
+        body: JSON.stringify({
+          event_type: "LEAVE",
+          event_time: item.date + "T00:00:00"
+        })
+      });
 
+    }
 
-    // save weekly leave
-for (const wd of tempLeave.weekdays) {
-
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
-    method: "POST",
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: "Bearer " + SUPABASE_KEY,
-      "Content-Type": "application/json",
-      Prefer: "return=representation"
-    },
-    body: JSON.stringify({
-      title: "Weekly Leave",
-      category: "leave",
-      status: "approved",
-      task_date: "2000-01-0" + (wd + 1),   // ⭐ VERY IMPORTANT
-      raw_input: "weekday:" + wd
-    })
-  });
-
-  if (!res.ok) {
-    const t = await res.text();
-    alert("DB Insert Error: " + t);
-    return;
-  }
-
-}
-
-
-
-    
-    alert("✅ Leave Saved To Database");
+    alert("✅ Leave Saved");
 
     leaveSettings = JSON.parse(JSON.stringify(tempLeave));
 
@@ -719,9 +693,7 @@ for (const wd of tempLeave.weekdays) {
     renderAll();
 
   } catch (e) {
-
-    alert("Error saving leave: " + e.message);
-
+    alert("Leave save error: " + e.message);
   }
 
 }
