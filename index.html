@@ -1,1 +1,1493 @@
-.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0a;
+      --surface:   #111111;
+      --surface2:  #181818;
+      --surface3:  #222222;
+      --border:    #2a2a2a;
+      --border2:   #333333;
+      --text:      #f0f0f0;
+      --text2:     #888888;
+      --text3:     #444444;
+      --in:        #4ade80;
+      --in-bg:     #0d2b1a;
+      --in-border: #1a4a2a;
+      --out:       #f87171;
+      --out-bg:    #2b0d0d;
+      --out-border:#4a1a1a;
+      --leave:     #facc15;
+      --leave-bg:  #1a1500;
+      --leave-border: #2a2300;
+      --wfh:       #38bdf8;
+      --wfh-bg:    #071922;
+      --wfh-border:#12364a;
+      --accent:    #6366f1;
+      --radius:    12px;
+    }
+
+    body {
+      font-family: 'Geist', system-ui, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+      color: var(--text);
+    }
+
+    .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-height: 60vh; color: var(--text3); font-size: 12px; letter-spacing: 0.08em; }
+    .spinner { width: 24px; height: 24px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+    .error-box { max-width: 600px; margin: 60px auto; background: var(--out-bg); border: 1px solid var(--out-border); border-radius: var(--radius); padding: 24px; display: none; }
+    .error-box h3 { font-size: 14px; color: var(--out); font-weight: 600; margin-bottom: 8px; }
+    .error-box p  { font-size: 13px; color: var(--text2); line-height: 1.6; }
+    .error-box code { display: block; margin-top: 12px; background: #1a0000; border-radius: 8px; padding: 10px 14px; font-family: 'Geist Mono', monospace; font-size: 11px; color: #ff8888; word-break: break-all; white-space: pre-wrap; }
+    .error-box .retry-btn { margin-top: 14px; background: var(--text); color: var(--bg); border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+    .empty-state { max-width: 600px; margin: 60px auto; text-align: center; color: var(--text3); display: none; }
+    .empty-state .empty-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 13px; }
+
+    .overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center;
+    }
+    .overlay.visible { display: flex; }
+
+    .pin-modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 16px; padding: 28px 28px 24px; width: 320px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6); animation: fadeUp 0.2s ease both;
+    }
+    .pin-modal-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .pin-lock-icon { width: 32px; height: 32px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .pin-modal h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
+    .pin-modal > p { font-size: 12px; color: var(--text3); margin-bottom: 20px; margin-top: 3px; }
+    .pin-dots { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border2); background: transparent; transition: all 0.15s; }
+    .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+    .pin-dot.error  { background: var(--out); border-color: var(--out); }
+    .pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .pin-key { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 0; cursor: pointer; font-size: 16px; font-weight: 500; color: var(--text); font-family: 'Geist Mono', monospace; transition: background 0.1s, border-color 0.1s, transform 0.08s; user-select: none; }
+    .pin-key:hover  { background: var(--surface3); border-color: var(--border2); }
+    .pin-key:active { transform: scale(0.94); }
+    .pin-key.wide   { grid-column: span 2; }
+    .pin-key.del-key { font-size: 13px; color: var(--text2); }
+    .pin-error-msg { font-size: 11px; color: var(--out); text-align: center; min-height: 16px; margin-bottom: 4px; letter-spacing: 0.02em; }
+    .pin-cancel { width: 100%; background: none; border: none; color: var(--text3); font-size: 12px; font-family: inherit; cursor: pointer; padding: 6px; margin-top: 2px; border-radius: 8px; transition: color 0.1s; }
+    .pin-cancel:hover { color: var(--text2); }
+
+    .add-modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 16px; padding: 24px; width: 360px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6); animation: fadeUp 0.2s ease both;
+    }
+    .add-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .add-modal-header h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--text3); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 15px; transition: background 0.1s, color 0.1s; }
+    .modal-close:hover { background: var(--surface3); color: var(--text); }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 12px; font-size: 13px; color: var(--text);
+      font-family: 'Geist', sans-serif; outline: none; transition: border-color 0.15s;
+    }
+    .form-input:focus { border-color: var(--border2); }
+    .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .type-btn {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2);
+      font-family: inherit; transition: all 0.15s; text-align: center;
+    }
+    .type-btn:hover { border-color: var(--border2); color: var(--text); }
+    .type-btn.active-in  { background: var(--in-bg); border-color: var(--in-border); color: var(--in); }
+    .type-btn.active-out { background: var(--out-bg); border-color: var(--out-border); color: var(--out); }
+
+    .add-submit {
+      width: 100%; background: var(--text); color: var(--bg);
+      border: none; border-radius: 8px; padding: 11px;
+      font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: opacity 0.15s; margin-top: 4px;
+    }
+    .add-submit:hover { opacity: 0.88; }
+    .add-submit:disabled { opacity: 0.3; cursor: not-allowed; }
+    .add-msg { font-size: 11px; text-align: center; margin-top: 10px; min-height: 16px; }
+    .add-msg.ok  { color: var(--in); }
+    .add-msg.err { color: var(--out); }
+
+    .leave-modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 16px; padding: 24px; width: 380px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6); animation: fadeUp 0.2s ease both;
+    }
+    .leave-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .leave-modal-header h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
+    .leave-modal > .sub { font-size: 12px; color: var(--text3); margin-bottom: 18px; }
+    .status-note { font-size: 11px; color: var(--text3); margin-top: -4px; margin-bottom: 14px; line-height: 1.5; }
+
+    .leave-section-title { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+
+    .weekday-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 18px; }
+    .wd-btn {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+      padding: 7px 4px; cursor: pointer; font-size: 10px; font-weight: 500; color: var(--text3);
+      font-family: inherit; text-align: center; transition: all 0.15s;
+    }
+    .wd-btn:hover { border-color: var(--border2); color: var(--text2); }
+    .wd-btn.active { background: var(--leave-bg); border-color: var(--leave-border); color: var(--leave); }
+
+    .leave-date-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .leave-date-row .form-input { flex: 1; }
+    .leave-date-row .form-input[type="text"] { flex: 1.5; }
+    .leave-add-btn {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 14px; font-size: 12px; font-weight: 500; cursor: pointer;
+      color: var(--text2); font-family: inherit; white-space: nowrap; transition: all 0.15s;
+    }
+    .leave-add-btn:hover { border-color: var(--border2); color: var(--text); }
+
+    .leave-list { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; max-height: 160px; overflow-y: auto; }
+    .leave-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--leave-bg); border: 1px solid var(--leave-border); border-radius: 8px; }
+    .leave-item-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--leave); flex-shrink: 0; }
+    .leave-item-info { flex: 1; }
+    .leave-item-date { font-size: 12px; font-weight: 500; color: var(--leave); font-family: 'Geist Mono', monospace; }
+    .leave-item-label { font-size: 11px; color: var(--text3); margin-top: 1px; }
+    .leave-item-del { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: color 0.1s; line-height: 1; }
+    .leave-item-del:hover { color: var(--out); }
+    .leave-empty { font-size: 12px; color: var(--text3); text-align: center; padding: 14px; }
+
+    .leave-save-btn { width: 100%; background: var(--text); color: var(--bg); border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+    .leave-save-btn:hover { opacity: 0.88; }
+
+    .wfh-modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 16px; padding: 24px; width: 380px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6); animation: fadeUp 0.2s ease both;
+    }
+    .wfh-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .wfh-modal-header h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
+    .wfh-modal > .sub { font-size: 12px; color: var(--text3); margin-bottom: 18px; }
+    .weekday-grid.wfh .wd-btn.active { background: var(--wfh-bg); border-color: var(--wfh-border); color: var(--wfh); }
+    .wfh-date-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .wfh-date-row .form-input { flex: 1; }
+    .wfh-add-btn {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 14px; font-size: 12px; font-weight: 500; cursor: pointer;
+      color: var(--text2); font-family: inherit; white-space: nowrap; transition: all 0.15s;
+    }
+    .wfh-add-btn:hover { border-color: var(--border2); color: var(--text); }
+    .wfh-list { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; max-height: 160px; overflow-y: auto; }
+    .wfh-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--wfh-bg); border: 1px solid var(--wfh-border); border-radius: 8px; }
+    .wfh-item-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--wfh); flex-shrink: 0; }
+    .wfh-item-info { flex: 1; }
+    .wfh-item-date { font-size: 12px; font-weight: 500; color: var(--wfh); font-family: 'Geist Mono', monospace; }
+    .wfh-item-del { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: color 0.1s; line-height: 1; }
+    .wfh-item-del:hover { color: var(--out); }
+    .wfh-empty { font-size: 12px; color: var(--text3); text-align: center; padding: 14px; }
+    .wfh-save-btn { width: 100%; background: var(--text); color: var(--bg); border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+    .wfh-save-btn:hover { opacity: 0.88; }
+
+    #app { max-width: 860px; margin: 0 auto; display: none; }
+
+    .header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+    .header-left h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.04em; color: var(--text); }
+    .header-left p  { font-size: 12px; color: var(--text3); margin-top: 3px; }
+    .header-right   { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .legend { display: flex; gap: 12px; align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+    .legend-dot  { width: 6px; height: 6px; border-radius: 50%; }
+
+    .month-nav { display: flex; align-items: center; gap: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 4px; }
+    .month-nav button { background: none; border: none; width: 28px; height: 28px; border-radius: 7px; cursor: pointer; color: var(--text2); display: flex; align-items: center; justify-content: center; font-size: 15px; transition: background 0.1s, color 0.1s; }
+    .month-nav button:hover { background: var(--surface2); color: var(--text); }
+    .month-nav .month-label { font-size: 13px; font-weight: 500; color: var(--text); min-width: 118px; text-align: center; letter-spacing: -0.01em; }
+
+    .admin-strip { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 9px 14px; margin-bottom: 14px; font-size: 12px; border: 1px solid var(--border); background: var(--surface); transition: background 0.25s, border-color 0.25s; }
+    .admin-strip.unlocked { background: #13130a; border-color: #2a2a10; }
+
+    .strip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex-shrink: 0; transition: background 0.25s; }
+    .admin-strip.unlocked .strip-dot { background: #facc15; }
+
+    .strip-label { flex: 1; font-size: 12px; color: var(--text3); transition: color 0.25s; }
+    .admin-strip.unlocked .strip-label { color: #a89a30; }
+
+    .strip-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+    .strip-action { background: none; border: 1px solid var(--border2); border-radius: 6px; padding: 5px 13px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--text2); transition: all 0.15s; white-space: nowrap; }
+    .strip-action:hover { background: var(--surface2); color: var(--text); }
+    .admin-strip.unlocked .strip-action { color: #a89a30; border-color: #2a2a10; }
+    .admin-strip.unlocked .strip-action:hover { background: #1a1a00; color: #facc15; }
+    .strip-action.leave-btn { border-color: var(--leave-border); color: #6b5c00; }
+    .strip-action.leave-btn:hover { background: var(--leave-bg); color: var(--leave); }
+    .admin-strip.unlocked .strip-action.leave-btn { color: #a89a30; border-color: #2a2a10; }
+    .admin-strip.unlocked .strip-action.leave-btn:hover { background: #1a1a00; color: var(--leave); border-color: var(--leave-border); }
+    .strip-action.wfh-btn { border-color: var(--wfh-border); color: #4d8ea8; }
+    .strip-action.wfh-btn:hover { background: var(--wfh-bg); color: var(--wfh); }
+    .admin-strip.unlocked .strip-action.wfh-btn { color: #7fb5cb; border-color: var(--wfh-border); }
+    .admin-strip.unlocked .strip-action.wfh-btn:hover { background: var(--wfh-bg); color: var(--wfh); }
+    .strip-action.hidden { display: none; }
+
+    .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .stat-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-family: 'Geist Mono', monospace; }
+    .stat-value.green  { color: var(--in); }
+    .stat-value.red    { color: var(--out); }
+    .stat-value.yellow { color: var(--leave); }
+    .stat-value.blue   { color: var(--wfh); }
+
+    .cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+    .cal-head { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); }
+    .cal-head-cell { text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-cell { min-height: 78px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 7px 6px 5px; cursor: default; position: relative; transition: background 0.1s; }
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell.other-month { background: #0d0d0d; }
+    .cal-cell.other-month .day-num { color: var(--text3); }
+    .cal-cell.today .day-num { background: var(--text); color: var(--bg); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .cal-cell.is-leave { background: var(--leave-bg); }
+    .cal-cell.is-leave .day-num { color: var(--leave); }
+    .cal-cell.is-wfh { background: var(--wfh-bg); }
+    .cal-cell.is-wfh .day-num { color: var(--wfh); }
+    .cal-cell.has-data { cursor: pointer; }
+    .cal-cell.has-data:hover { background: var(--surface2); }
+    .cal-cell.is-leave.has-data:hover { background: #1a1500; }
+    .cal-cell.is-wfh.has-data:hover { background: #0b2230; }
+    .cal-cell.selected { background: var(--surface2) !important; outline: 1px solid var(--border2); outline-offset: -1px; }
+
+    .leave-badge { font-size: 9px; font-weight: 500; color: var(--leave); background: rgba(250,204,21,0.08); border: 1px solid var(--leave-border); border-radius: 4px; padding: 1px 5px; display: inline-block; margin-bottom: 3px; }
+    .wfh-badge { font-size: 9px; font-weight: 500; color: var(--wfh); background: rgba(56,189,248,0.08); border: 1px solid var(--wfh-border); border-radius: 4px; padding: 1px 5px; display: inline-block; margin-bottom: 3px; }
+
+    .day-num { font-size: 11px; font-weight: 500; color: var(--text2); margin-bottom: 4px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-family: 'Geist Mono', monospace; }
+    .cell-events { display: flex; flex-direction: column; gap: 2px; }
+    .cell-pill { font-size: 9px; font-weight: 500; padding: 2px 5px; border-radius: 4px; display: flex; align-items: center; gap: 3px; white-space: nowrap; overflow: hidden; }
+    .cell-pill.in  { background: var(--in-bg);  color: var(--in); }
+    .cell-pill.out { background: var(--out-bg); color: var(--out); }
+    .cell-pill-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .cell-more { font-size: 9px; color: var(--text3); padding-left: 2px; margin-top: 1px; }
+
+    .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; }
+    .detail-panel.visible { display: block; }
+    .detail-header { padding: 13px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .detail-date { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
+    .detail-meta { display: flex; align-items: center; gap: 8px; }
+    .detail-count { font-size: 11px; color: var(--text3); background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 2px 10px; font-weight: 500; font-family: 'Geist Mono', monospace; }
+    .detail-close { background: none; border: none; cursor: pointer; color: var(--text3); width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: background 0.1s, color 0.1s; }
+    .detail-close:hover { background: var(--surface3); color: var(--text); }
+
+    .detail-actions { padding: 10px 12px 0; display: flex; gap: 8px; }
+    .detail-add-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 7px 14px; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text2); font-family: inherit; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+    .detail-add-btn:hover { border-color: var(--border2); color: var(--text); }
+    .detail-add-btn.locked { opacity: 0.25; pointer-events: none; }
+
+    .detail-list { list-style: none; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+    .detail-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid transparent; }
+    .detail-item.in  { background: var(--in-bg);  border-color: var(--in-border); }
+    .detail-item.out { background: var(--out-bg); border-color: var(--out-border); }
+    .detail-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .detail-item.in  .detail-dot { background: var(--in); }
+    .detail-item.out .detail-dot { background: var(--out); }
+    .detail-info { flex: 1; }
+    .detail-type { font-size: 13px; font-weight: 600; }
+    .detail-item.in  .detail-type { color: var(--in); }
+    .detail-item.out .detail-type { color: var(--out); }
+    .detail-time { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: 'Geist Mono', monospace; }
+
+    .delete-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text3); font-family: inherit; display: flex; align-items: center; gap: 5px; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
+    .delete-btn:hover   { background: var(--out-bg); border-color: var(--out-border); color: var(--out); }
+    .delete-btn.confirming { background: var(--out); border-color: var(--out); color: #fff; }
+    .delete-btn.deleting   { opacity: 0.4; pointer-events: none; }
+    .delete-btn.locked     { opacity: 0.2; pointer-events: none; }
+
+    @keyframes spin   { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes shake  { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+    .fade-in { animation: fadeUp 0.25s ease both; }
+    .shake   { animation: shake 0.35s ease; }
+
+    @media (max-width: 600px) {
+      body { padding: 20px 12px 60px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .cal-cell { min-height: 54px; }
+      .cell-pill .pill-text { display: none; }
+      .strip-label { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="overlay" id="pinOverlay">
+  <div class="pin-modal">
+    <div class="pin-modal-header">
+      <div class="pin-lock-icon">🔐</div>
+      <h2>Admin PIN</h2>
+    </div>
+    <p>Enter your PIN to unlock admin mode for this session.</p>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-keypad" id="pinKeypad">
+      <button class="pin-key" data-k="1">1</button>
+      <button class="pin-key" data-k="2">2</button>
+      <button class="pin-key" data-k="3">3</button>
+      <button class="pin-key" data-k="4">4</button>
+      <button class="pin-key" data-k="5">5</button>
+      <button class="pin-key" data-k="6">6</button>
+      <button class="pin-key" data-k="7">7</button>
+      <button class="pin-key" data-k="8">8</button>
+      <button class="pin-key" data-k="9">9</button>
+      <button class="pin-key wide" data-k="0">0</button>
+      <button class="pin-key del-key" data-k="del">⌫</button>
+    </div>
+    <div class="pin-error-msg" id="pinError"></div>
+    <button class="pin-cancel" id="pinCancel">Cancel</button>
+  </div>
+</div>
+
+<div class="overlay" id="addOverlay">
+  <div class="add-modal">
+    <div class="add-modal-header">
+      <h2>Add Attendance</h2>
+      <button class="modal-close" id="addClose">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input type="date" class="form-input" id="addDate" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Time</label>
+      <input type="time" class="form-input" id="addTime" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <div class="type-toggle">
+        <button class="type-btn active-in" id="typeIn" onclick="selectType('IN')">✓ Check In</button>
+        <button class="type-btn" id="typeOut" onclick="selectType('OUT')">Check Out</button>
+      </div>
+    </div>
+    <button class="add-submit" id="addSubmit" onclick="submitLog()">Add Record</button>
+    <div class="add-msg" id="addMsg"></div>
+  </div>
+</div>
+
+<div class="overlay" id="leaveOverlay">
+  <div class="leave-modal">
+    <div class="leave-modal-header">
+      <h2>Manage Leave</h2>
+      <button class="modal-close" id="leaveClose">✕</button>
+    </div>
+    <p class="sub">Set weekly off-days and one-off leave dates from a single place.</p>
+
+    <div class="leave-section-title">Recurring Weekdays</div>
+    <div class="weekday-grid" id="weekdayGrid">
+      <button class="wd-btn" data-wd="0">Sun</button>
+      <button class="wd-btn" data-wd="1">Mon</button>
+      <button class="wd-btn" data-wd="2">Tue</button>
+      <button class="wd-btn" data-wd="3">Wed</button>
+      <button class="wd-btn" data-wd="4">Thu</button>
+      <button class="wd-btn" data-wd="5">Fri</button>
+      <button class="wd-btn" data-wd="6">Sat</button>
+    </div>
+
+    <div class="leave-section-title">Specific Dates</div>
+    <div class="leave-date-row">
+      <input type="date" class="form-input" id="leaveDateInput" />
+      <input type="text" class="form-input" id="leaveLabelInput" placeholder="Label (e.g. Diwali)" />
+      <button class="leave-add-btn" onclick="addSpecificLeave()">+ Add</button>
+    </div>
+    <p class="status-note">Specific leave labels are stored in the database and shown back on the calendar detail view.</p>
+    <ul class="leave-list" id="leaveList"></ul>
+
+    <button class="leave-save-btn" onclick="saveLeaveSettings()">Save Settings</button>
+  </div>
+</div>
+
+<div class="overlay" id="wfhOverlay">
+  <div class="wfh-modal">
+    <div class="wfh-modal-header">
+      <h2>Manage WFH</h2>
+      <button class="modal-close" id="wfhClose">✕</button>
+    </div>
+    <p class="sub">Set recurring work-from-home weekdays and one-off WFH dates.</p>
+
+    <div class="leave-section-title">Recurring Weekdays</div>
+    <div class="weekday-grid wfh" id="wfhWeekdayGrid">
+      <button class="wd-btn" data-wd="0">Sun</button>
+      <button class="wd-btn" data-wd="1">Mon</button>
+      <button class="wd-btn" data-wd="2">Tue</button>
+      <button class="wd-btn" data-wd="3">Wed</button>
+      <button class="wd-btn" data-wd="4">Thu</button>
+      <button class="wd-btn" data-wd="5">Fri</button>
+      <button class="wd-btn" data-wd="6">Sat</button>
+    </div>
+
+    <div class="leave-section-title">Specific Dates</div>
+    <div class="wfh-date-row">
+      <input type="date" class="form-input" id="wfhDateInput" />
+      <button class="wfh-add-btn" onclick="addSpecificWfh()">+ Add</button>
+    </div>
+    <p class="status-note">Use recurring weekdays for fixed patterns and specific dates for exceptions.</p>
+    <ul class="wfh-list" id="wfhList"></ul>
+
+    <button class="wfh-save-btn" onclick="saveWfhSettings()">Save Settings</button>
+  </div>
+</div>
+
+<div id="loading" class="loading"><div class="spinner"></div><span>LOADING</span></div>
+<div id="errorBox" class="error-box">
+  <h3>⚠ Could not load attendance data</h3>
+  <p id="errorMsg"></p>
+  <code id="errorDetail" style="display:none"></code>
+  <button class="retry-btn" onclick="loadData()">Retry</button>
+</div>
+<div id="emptyState" class="empty-state"><div class="empty-icon">○</div><p>No attendance records found.</p></div>
+
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <h1>Attendance</h1>
+      <p>Office check-in & check-out log</p>
+    </div>
+    <div class="header-right">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--in)"></div>In</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--out)"></div>Out</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--leave)"></div>Leave</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--wfh)"></div>WFH</div>
+      </div>
+      <div class="month-nav">
+        <button id="prevMonth">&#8249;</button>
+        <span class="month-label" id="monthLabel"></span>
+        <button id="nextMonth">&#8250;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-strip fade-in" id="adminStrip">
+    <div class="strip-dot"></div>
+    <span class="strip-label" id="stripLabel">🔒 Locked — unlock to add or delete records</span>
+    <div class="strip-actions">
+      <button class="strip-action leave-btn" id="leaveBtn">📅 Manage Leave</button>
+      <button class="strip-action wfh-btn" id="wfhBtn">🏠 Manage WFH</button>
+      <button class="strip-action" id="stripBtn">Unlock</button>
+    </div>
+  </div>
+
+  <div class="stats fade-in">
+    <div class="stat-card"><div class="stat-label">Days Present</div><div class="stat-value" id="stat-days">—</div></div>
+    <div class="stat-card"><div class="stat-label">Check-ins</div><div class="stat-value green" id="stat-in">—</div></div>
+    <div class="stat-card"><div class="stat-label">Check-outs</div><div class="stat-value red" id="stat-out">—</div></div>
+    <div class="stat-card"><div class="stat-label">Leave Days</div><div class="stat-value yellow" id="stat-leave">—</div></div>
+    <div class="stat-card"><div class="stat-label">WFH Days</div><div class="stat-value blue" id="stat-wfh">—</div></div>
+  </div>
+
+  <div class="cal-card fade-in">
+    <div class="cal-head">
+      <div class="cal-head-cell">Sun</div><div class="cal-head-cell">Mon</div>
+      <div class="cal-head-cell">Tue</div><div class="cal-head-cell">Wed</div>
+      <div class="cal-head-cell">Thu</div><div class="cal-head-cell">Fri</div>
+      <div class="cal-head-cell">Sat</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div class="detail-panel fade-in" id="detailPanel">
+    <div class="detail-header">
+      <div class="detail-date" id="detailDate"></div>
+      <div class="detail-meta">
+        <span class="detail-count" id="detailCount"></span>
+        <button class="detail-close" id="detailClose">✕</button>
+      </div>
+    </div>
+    <div class="detail-actions">
+      <button class="detail-add-btn locked" id="detailAddBtn">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 2v7M2 5.5h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add Record
+      </button>
+    </div>
+    <ul class="detail-list" id="detailList"></ul>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://kpansofmofolnnfnwlml.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYW5zb2Ztb2ZvbG5uZm53bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzU3ODksImV4cCI6MjA4ODExMTc4OX0.v_TSJONVfpvxuGQnK6O2S9ZXEpRNdfeOvXELeN_yYW0";
+const TABLE = "office_logs";
+const SETTINGS_TABLE = "office_day_settings";
+const TIME_COL = "event_time";
+const TYPE_COL = "event_type";
+const LABEL_COL = "event_label";
+const ADMIN_PIN = "2281";
+
+let leaveSettings = { weekdays: [] };
+let leaveRecords = [];
+let wfhSettings = { weekdays: [] };
+let wfhRecords = [];
+
+function getSpecificLeaveRecord(dateStr) {
+  return leaveRecords.find((item) => item.date === dateStr) || null;
+}
+
+function getSpecificWfhRecord(dateStr) {
+  return wfhRecords.find((item) => item.date === dateStr) || null;
+}
+
+function isLeaveDay(dateObj) {
+  const wd = dateObj.getDay();
+  if (leaveSettings.weekdays.includes(wd)) return true;
+  return !!getSpecificLeaveRecord(dateKey(dateObj));
+}
+
+function isWfhDay(dateObj) {
+  const wd = dateObj.getDay();
+  if (wfhSettings.weekdays.includes(wd)) return true;
+  return !!getSpecificWfhRecord(dateKey(dateObj));
+}
+
+function getLeaveDateLabel(dateStr) {
+  const found = getSpecificLeaveRecord(dateStr);
+  return found ? found.label : "";
+}
+
+function getDayStatus(dateObj) {
+  if (isLeaveDay(dateObj)) return "LEAVE";
+  if (isWfhDay(dateObj)) return "WFH";
+  return null;
+}
+
+function authHeaders(extra = {}) {
+  return {
+    apikey: SUPABASE_KEY,
+    Authorization: "Bearer " + SUPABASE_KEY,
+    ...extra
+  };
+}
+
+async function requestJson(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: authHeaders(options.headers || {})
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`HTTP ${res.status}${body ? ` — ${body.slice(0, 200)}` : ""}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYS_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+let allLogs = [], allRows = [], viewYear, viewMonth, selectedCell = null;
+let adminUnlocked = false;
+let pinBuffer = "", pinResolve = null;
+let selectedAddType = "IN";
+let detailCurrentDate = null;
+
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(2, "0");
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatTime(d) {
+  let h = d.getHours(), m = d.getMinutes(), ap = h >= 12 ? "PM" : "AM";
+  if (h > 12) h -= 12;
+  if (h === 0) h = 12;
+  return `${pad(h)}:${pad(m)} ${ap}`;
+}
+
+function formatFullDate(d) {
+  return `${DAYS_SHORT[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function buildDayMap(logs) {
+  const map = {};
+  logs.forEach((l) => {
+    const k = dateKey(l._date);
+    (map[k] = map[k] || []).push(l);
+  });
+  return map;
+}
+
+function showError(msg, detail) {
+  $("loading").style.display = "none";
+  $("app").style.display = "none";
+  $("emptyState").style.display = "none";
+  $("errorMsg").textContent = msg;
+  const dc = $("errorDetail");
+  dc.textContent = detail || "";
+  dc.style.display = detail ? "block" : "none";
+  $("errorBox").style.display = "block";
+}
+
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    const d = $(`pd${i}`);
+    d.classList.remove("filled", "error");
+    if (i < pinBuffer.length) d.classList.add("filled");
+  }
+}
+
+function flashPinError(msg) {
+  $("pinError").textContent = msg;
+  for (let i = 0; i < 4; i++) {
+    const d = $(`pd${i}`);
+    d.classList.remove("filled");
+    d.classList.add("error");
+  }
+  const dots = $("pinDots");
+  dots.classList.add("shake");
+  setTimeout(() => {
+    dots.classList.remove("shake");
+    for (let i = 0; i < 4; i++) $("pd" + i).classList.remove("error");
+    $("pinError").textContent = "";
+    pinBuffer = "";
+    updatePinDots();
+  }, 600);
+}
+
+function openPinModal() {
+  return new Promise((resolve) => {
+    pinResolve = resolve;
+    pinBuffer = "";
+    $("pinError").textContent = "";
+    updatePinDots();
+    $("pinOverlay").classList.add("visible");
+  });
+}
+
+function closePinModal(ok) {
+  $("pinOverlay").classList.remove("visible");
+  if (pinResolve) {
+    pinResolve(ok);
+    pinResolve = null;
+  }
+}
+
+$("pinKeypad").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pin-key");
+  if (!btn) return;
+  const k = btn.dataset.k;
+  if (k === "del") {
+    pinBuffer = pinBuffer.slice(0, -1);
+    updatePinDots();
+    return;
+  }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += k;
+  updatePinDots();
+  if (pinBuffer.length === 4) {
+    if (pinBuffer === ADMIN_PIN) closePinModal(true);
+    else flashPinError("Incorrect PIN");
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if ($("addOverlay").classList.contains("visible") || $("leaveOverlay").classList.contains("visible") || $("wfhOverlay").classList.contains("visible")) return;
+  if (!$("pinOverlay").classList.contains("visible")) return;
+  if (e.key >= "0" && e.key <= "9") {
+    if (pinBuffer.length < 4) {
+      pinBuffer += e.key;
+      updatePinDots();
+    }
+    if (pinBuffer.length === 4) {
+      if (pinBuffer === ADMIN_PIN) closePinModal(true);
+      else flashPinError("Incorrect PIN");
+    }
+  } else if (e.key === "Backspace") {
+    pinBuffer = pinBuffer.slice(0, -1);
+    updatePinDots();
+  } else if (e.key === "Escape") {
+    closePinModal(false);
+  }
+});
+
+$("pinCancel").addEventListener("click", () => closePinModal(false));
+$("pinOverlay").addEventListener("click", (e) => {
+  if (e.target === $("pinOverlay")) closePinModal(false);
+});
+
+function updateStrip() {
+  const strip = $("adminStrip"), label = $("stripLabel"), btn = $("stripBtn");
+  const leaveBtn = $("leaveBtn");
+  const wfhBtn = $("wfhBtn");
+  if (adminUnlocked) {
+    strip.classList.add("unlocked");
+    label.textContent = "🔓 Admin mode — add & delete records unlocked";
+    btn.textContent = "Lock";
+    leaveBtn.classList.remove("hidden");
+    wfhBtn.classList.remove("hidden");
+  } else {
+    strip.classList.remove("unlocked");
+    label.textContent = "🔒 Locked — unlock to add or delete records";
+    btn.textContent = "Unlock";
+    leaveBtn.classList.add("hidden");
+    wfhBtn.classList.add("hidden");
+  }
+  document.querySelectorAll(".delete-btn").forEach((b) => {
+    if (adminUnlocked) b.classList.remove("locked");
+    else b.classList.add("locked");
+  });
+  const dab = $("detailAddBtn");
+  if (dab) {
+    if (adminUnlocked) dab.classList.remove("locked");
+    else dab.classList.add("locked");
+  }
+}
+
+$("stripBtn").addEventListener("click", async () => {
+  if (adminUnlocked) {
+    adminUnlocked = false;
+    updateStrip();
+  } else {
+    const ok = await openPinModal();
+    if (ok) {
+      adminUnlocked = true;
+      updateStrip();
+    }
+  }
+});
+
+let tempLeave = null;
+let tempWfh = null;
+
+function openLeaveModal() {
+  tempLeave = {
+    weekdays: [...leaveSettings.weekdays],
+    dates: leaveRecords.map((item) => ({ id: item.id, date: item.date, label: item.label || "" }))
+  };
+  renderWeekdayGrid();
+  renderLeaveList();
+  $("leaveDateInput").value = "";
+  $("leaveLabelInput").value = "";
+  $("leaveOverlay").classList.add("visible");
+}
+
+$("leaveBtn").addEventListener("click", openLeaveModal);
+$("leaveClose").addEventListener("click", () => {
+  $("leaveOverlay").classList.remove("visible");
+  tempLeave = null;
+});
+$("leaveOverlay").addEventListener("click", (e) => {
+  if (e.target === $("leaveOverlay")) {
+    $("leaveOverlay").classList.remove("visible");
+    tempLeave = null;
+  }
+});
+
+function openWfhModal() {
+  tempWfh = {
+    weekdays: [...wfhSettings.weekdays],
+    dates: wfhRecords.map((item) => ({ id: item.id, date: item.date }))
+  };
+  renderWfhWeekdayGrid();
+  renderWfhList();
+  $("wfhDateInput").value = "";
+  $("wfhOverlay").classList.add("visible");
+}
+
+$("wfhBtn").addEventListener("click", openWfhModal);
+$("wfhClose").addEventListener("click", () => {
+  $("wfhOverlay").classList.remove("visible");
+  tempWfh = null;
+});
+$("wfhOverlay").addEventListener("click", (e) => {
+  if (e.target === $("wfhOverlay")) {
+    $("wfhOverlay").classList.remove("visible");
+    tempWfh = null;
+  }
+});
+
+function renderWeekdayGrid() {
+  document.querySelectorAll("#weekdayGrid .wd-btn").forEach((btn) => {
+    const wd = parseInt(btn.dataset.wd, 10);
+    btn.classList.toggle("active", tempLeave.weekdays.includes(wd));
+    btn.onclick = () => {
+      const idx = tempLeave.weekdays.indexOf(wd);
+      if (idx >= 0) tempLeave.weekdays.splice(idx, 1);
+      else tempLeave.weekdays.push(wd);
+      renderWeekdayGrid();
+    };
+  });
+}
+
+function renderLeaveList() {
+  const list = $("leaveList");
+  list.innerHTML = "";
+  if (!tempLeave.dates.length) {
+    list.innerHTML = '<div class="leave-empty">No specific dates added</div>';
+    return;
+  }
+  tempLeave.dates.sort((a, b) => a.date.localeCompare(b.date)).forEach((item, idx) => {
+    const li = document.createElement("li");
+    li.className = "leave-item";
+    li.innerHTML = `<div class="leave-item-dot"></div><div class="leave-item-info"><div class="leave-item-date">${item.date}</div>${item.label ? `<div class="leave-item-label">${item.label}</div>` : ""}</div><button class="leave-item-del" data-idx="${idx}">×</button>`;
+    list.appendChild(li);
+  });
+  list.querySelectorAll(".leave-item-del").forEach((btn) => {
+    btn.onclick = () => {
+      tempLeave.dates.splice(parseInt(btn.dataset.idx, 10), 1);
+      renderLeaveList();
+    };
+  });
+}
+
+function renderWfhWeekdayGrid() {
+  document.querySelectorAll("#wfhWeekdayGrid .wd-btn").forEach((btn) => {
+    const wd = parseInt(btn.dataset.wd, 10);
+    btn.classList.toggle("active", tempWfh.weekdays.includes(wd));
+    btn.onclick = () => {
+      const idx = tempWfh.weekdays.indexOf(wd);
+      if (idx >= 0) tempWfh.weekdays.splice(idx, 1);
+      else tempWfh.weekdays.push(wd);
+      renderWfhWeekdayGrid();
+    };
+  });
+}
+
+function renderWfhList() {
+  const list = $("wfhList");
+  list.innerHTML = "";
+  if (!tempWfh.dates.length) {
+    list.innerHTML = '<div class="wfh-empty">No specific WFH dates added</div>';
+    return;
+  }
+  tempWfh.dates.sort((a, b) => a.date.localeCompare(b.date)).forEach((item, idx) => {
+    const li = document.createElement("li");
+    li.className = "wfh-item";
+    li.innerHTML = `<div class="wfh-item-dot"></div><div class="wfh-item-info"><div class="wfh-item-date">${item.date}</div></div><button class="wfh-item-del" data-idx="${idx}">×</button>`;
+    list.appendChild(li);
+  });
+  list.querySelectorAll(".wfh-item-del").forEach((btn) => {
+    btn.onclick = () => {
+      tempWfh.dates.splice(parseInt(btn.dataset.idx, 10), 1);
+      renderWfhList();
+    };
+  });
+}
+
+function addSpecificLeave() {
+  const dateVal = $("leaveDateInput").value;
+  const labelVal = $("leaveLabelInput").value.trim();
+  if (!dateVal) {
+    alert("Please pick a date.");
+    return;
+  }
+  if (tempLeave.dates.some((d) => d.date === dateVal)) {
+    alert("This date is already added.");
+    return;
+  }
+  tempLeave.dates.push({ date: dateVal, label: labelVal });
+  $("leaveDateInput").value = "";
+  $("leaveLabelInput").value = "";
+  renderLeaveList();
+}
+
+function addSpecificWfh() {
+  const dateVal = $("wfhDateInput").value;
+  if (!dateVal) {
+    alert("Please pick a date.");
+    return;
+  }
+  if (tempWfh.dates.some((d) => d.date === dateVal)) {
+    alert("This date is already added.");
+    return;
+  }
+  tempWfh.dates.push({ date: dateVal });
+  $("wfhDateInput").value = "";
+  renderWfhList();
+}
+
+async function saveLeaveSettings() {
+  const nextWeekdays = [...tempLeave.weekdays].sort((a, b) => a - b);
+  const nextDates = [...tempLeave.dates].sort((a, b) => a.date.localeCompare(b.date));
+  const existingByDate = new Map(leaveRecords.map((item) => [item.date, item]));
+  const nextDateKeys = new Set(nextDates.map((item) => item.date));
+  const toInsert = nextDates.filter((item) => !existingByDate.has(item.date));
+  const toUpdate = nextDates.filter((item) => {
+    const existing = existingByDate.get(item.date);
+    return existing && (existing.label || "") !== (item.label || "");
+  });
+  const toDelete = leaveRecords.filter((item) => !nextDateKeys.has(item.date));
+
+  try {
+    await syncWeekdaySettings("LEAVE_WEEKDAY", nextWeekdays, leaveSettings.weekdays);
+
+    for (const item of toInsert) {
+      const inserted = await requestJson(`${TABLE}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          event_type: "LEAVE",
+          event_time: item.date + "T00:00:00",
+          [LABEL_COL]: item.label || null
+        })
+      });
+      if (inserted && inserted[0]) {
+        allRows.push({ ...inserted[0], _date: new Date(inserted[0][TIME_COL]) });
+      }
+    }
+
+    for (const item of toUpdate) {
+      const existing = existingByDate.get(item.date);
+      const updated = await requestJson(`${TABLE}?id=eq.${existing.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          [LABEL_COL]: item.label || null
+        })
+      });
+      if (updated && updated[0]) {
+        allRows = allRows.map((row) => row.id === existing.id ? { ...updated[0], _date: new Date(updated[0][TIME_COL]) } : row);
+      }
+    }
+
+    for (const item of toDelete) {
+      await requestJson(`${TABLE}?id=eq.${item.id}`, {
+        method: "DELETE",
+        headers: {
+          Prefer: "return=minimal"
+        }
+      });
+      allRows = allRows.filter((row) => row.id !== item.id);
+    }
+
+    leaveSettings = { weekdays: nextWeekdays };
+    syncDerivedData();
+
+    $("leaveOverlay").classList.remove("visible");
+    tempLeave = null;
+    renderAll();
+
+    if (detailCurrentDate) {
+      const detailKey = dateKey(detailCurrentDate);
+      const dayLogs = allLogs.filter((l) => dateKey(l._date) === detailKey);
+      showDetail(detailCurrentDate, dayLogs);
+    }
+  } catch (e) {
+    alert("Could not save leave settings: " + e.message);
+  }
+}
+
+async function saveWfhSettings() {
+  const nextWeekdays = [...tempWfh.weekdays].sort((a, b) => a - b);
+  const nextDates = [...tempWfh.dates].sort((a, b) => a.date.localeCompare(b.date));
+  const existingByDate = new Map(wfhRecords.map((item) => [item.date, item]));
+  const nextDateKeys = new Set(nextDates.map((item) => item.date));
+  const toInsert = nextDates.filter((item) => !existingByDate.has(item.date));
+  const toDelete = wfhRecords.filter((item) => !nextDateKeys.has(item.date));
+
+  try {
+    await syncWeekdaySettings("WFH_WEEKDAY", nextWeekdays, wfhSettings.weekdays);
+
+    for (const item of toInsert) {
+      const inserted = await requestJson(`${TABLE}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          event_type: "WFH",
+          event_time: item.date + "T00:00:00"
+        })
+      });
+      if (inserted && inserted[0]) {
+        allRows.push({ ...inserted[0], _date: new Date(inserted[0][TIME_COL]) });
+      }
+    }
+
+    for (const item of toDelete) {
+      await requestJson(`${TABLE}?id=eq.${item.id}`, {
+        method: "DELETE",
+        headers: {
+          Prefer: "return=minimal"
+        }
+      });
+      allRows = allRows.filter((row) => row.id !== item.id);
+    }
+
+    wfhSettings = { weekdays: nextWeekdays };
+    syncDerivedData();
+
+    $("wfhOverlay").classList.remove("visible");
+    tempWfh = null;
+    renderAll();
+
+    if (detailCurrentDate) {
+      const detailKey = dateKey(detailCurrentDate);
+      const dayLogs = allLogs.filter((l) => dateKey(l._date) === detailKey);
+      showDetail(detailCurrentDate, dayLogs);
+    }
+  } catch (e) {
+    alert("Could not save WFH settings: " + e.message);
+  }
+}
+
+function selectType(t) {
+  selectedAddType = t;
+  $("typeIn").className = "type-btn" + (t === "IN" ? " active-in" : "");
+  $("typeOut").className = "type-btn" + (t === "OUT" ? " active-out" : "");
+}
+
+function openAddModal(prefillDate) {
+  $("addMsg").textContent = "";
+  $("addMsg").className = "add-msg";
+  const now = new Date();
+  $("addDate").value = prefillDate || now.toISOString().slice(0, 10);
+  $("addTime").value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  selectType("IN");
+  $("addSubmit").disabled = false;
+  $("addOverlay").classList.add("visible");
+}
+
+$("addClose").addEventListener("click", () => $("addOverlay").classList.remove("visible"));
+$("addOverlay").addEventListener("click", (e) => {
+  if (e.target === $("addOverlay")) $("addOverlay").classList.remove("visible");
+});
+
+async function submitLog() {
+  const dateVal = $("addDate").value;
+  const timeVal = $("addTime").value;
+  if (!dateVal || !timeVal) {
+    $("addMsg").textContent = "Please fill date and time.";
+    $("addMsg").className = "add-msg err";
+    return;
+  }
+  const isoStr = `${dateVal}T${timeVal}:00`;
+  const eventDate = new Date(isoStr);
+  if (isNaN(eventDate)) {
+    $("addMsg").textContent = "Invalid date/time.";
+    $("addMsg").className = "add-msg err";
+    return;
+  }
+
+  $("addSubmit").disabled = true;
+  $("addMsg").textContent = "Saving…";
+  $("addMsg").className = "add-msg";
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
+      },
+      body: JSON.stringify({ [TIME_COL]: eventDate.toISOString(), [TYPE_COL]: selectedAddType })
+    });
+    if (!res.ok) {
+      $("addMsg").textContent = `Error: ${res.status}`;
+      $("addMsg").className = "add-msg err";
+      $("addSubmit").disabled = false;
+      return;
+    }
+    const inserted = await res.json();
+    if (inserted && inserted[0]) {
+      const newLog = { ...inserted[0], _date: new Date(inserted[0][TIME_COL]) };
+      allRows.push(newLog);
+      syncDerivedData();
+    }
+    $("addMsg").textContent = "✓ Record added!";
+    $("addMsg").className = "add-msg ok";
+    setTimeout(() => {
+      $("addOverlay").classList.remove("visible");
+      renderAll();
+      refreshDetailIfOpen(dateVal);
+    }, 800);
+  } catch (e) {
+    $("addMsg").textContent = "Network error: " + e.message;
+    $("addMsg").className = "add-msg err";
+    $("addSubmit").disabled = false;
+  }
+}
+
+function refreshDetailIfOpen(dateStr) {
+  if (!detailCurrentDate) return;
+  const k = dateKey(detailCurrentDate);
+  if (k === dateStr) {
+    const dayLogs = allLogs.filter((l) => dateKey(l._date) === k);
+    showDetail(detailCurrentDate, dayLogs);
+  }
+}
+
+async function loadData() {
+  $("errorBox").style.display = "none";
+  $("app").style.display = "none";
+  $("emptyState").style.display = "none";
+  $("loading").style.display = "flex";
+  try {
+    const [logData, settingsData] = await Promise.all([
+      requestJson(`${TABLE}?order=${TIME_COL}.desc&limit=5000`),
+      requestJson(`${SETTINGS_TABLE}?order=weekday.asc`)
+    ]);
+
+    allRows = (logData || []).map((l) => ({ ...l, _date: new Date(l[TIME_COL]) })).filter((l) => !isNaN(l._date));
+    const leaveWeekdays = (settingsData || []).filter((row) => row.setting_type === "LEAVE_WEEKDAY").map((row) => row.weekday);
+    const wfhWeekdays = (settingsData || []).filter((row) => row.setting_type === "WFH_WEEKDAY").map((row) => row.weekday);
+    leaveSettings = { weekdays: leaveWeekdays };
+    wfhSettings = { weekdays: wfhWeekdays };
+    syncDerivedData();
+
+    const latest = allRows[0]?._date || new Date();
+    viewYear = latest.getFullYear();
+    viewMonth = latest.getMonth();
+    $("loading").style.display = "none";
+    $("app").style.display = "block";
+    renderAll();
+  } catch (e) {
+    showError("Could not load attendance configuration from Supabase.", e.message);
+    return;
+  }
+}
+
+function syncDerivedData() {
+  allRows.sort((a, b) => b._date - a._date);
+  allLogs = allRows.filter((row) => row[TYPE_COL] !== "LEAVE" && row[TYPE_COL] !== "WFH");
+  const leaveMap = new Map();
+  allRows
+    .filter((row) => row[TYPE_COL] === "LEAVE")
+    .forEach((row) => {
+      const date = row._date.toISOString().slice(0, 10);
+      if (!leaveMap.has(date)) {
+        leaveMap.set(date, { id: row.id, date, label: row[LABEL_COL] || "" });
+      }
+    });
+  leaveRecords = [...leaveMap.values()].sort((a, b) => a.date.localeCompare(b.date));
+  const wfhMap = new Map();
+  allRows
+    .filter((row) => row[TYPE_COL] === "WFH")
+    .forEach((row) => {
+      const date = row._date.toISOString().slice(0, 10);
+      if (!wfhMap.has(date)) {
+        wfhMap.set(date, { id: row.id, date });
+      }
+    });
+  wfhRecords = [...wfhMap.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+async function syncWeekdaySettings(settingType, nextWeekdays, currentWeekdays) {
+  const currentSet = new Set(currentWeekdays);
+  const nextSet = new Set(nextWeekdays);
+  const toInsert = nextWeekdays.filter((weekday) => !currentSet.has(weekday));
+  const toDelete = currentWeekdays.filter((weekday) => !nextSet.has(weekday));
+
+  for (const weekday of toInsert) {
+    await requestJson(`${SETTINGS_TABLE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
+      },
+      body: JSON.stringify({
+        setting_type: settingType,
+        weekday
+      })
+    });
+  }
+
+  for (const weekday of toDelete) {
+    await requestJson(`${SETTINGS_TABLE}?setting_type=eq.${settingType}&weekday=eq.${weekday}`, {
+      method: "DELETE",
+      headers: {
+        Prefer: "return=minimal"
+      }
+    });
+  }
+}
+
+function trashSVG() {
+  return '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 3h8M4 3V2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M4.5 5v3.5M6.5 5v3.5M2 3l.5 5.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+async function deleteLog(id, btn, li) {
+  if (!adminUnlocked) {
+    const ok = await openPinModal();
+    if (!ok) return;
+    adminUnlocked = true;
+    updateStrip();
+  }
+  if (!btn.dataset.confirming) {
+    btn.dataset.confirming = "1";
+    btn.classList.add("confirming");
+    btn.innerHTML = "Confirm?";
+    setTimeout(() => {
+      if (btn.dataset.confirming) {
+        delete btn.dataset.confirming;
+        btn.classList.remove("confirming");
+        btn.innerHTML = trashSVG() + " Delete";
+      }
+    }, 3000);
+    return;
+  }
+  btn.classList.add("deleting");
+  btn.textContent = "…";
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${id}`, {
+      method: "DELETE",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY,
+        Prefer: "return=minimal"
+      }
+    });
+    if (!res.ok) {
+      const b = await res.text().catch(() => "");
+      alert(`Delete failed: ${res.status} — ${b}`);
+      btn.classList.remove("deleting");
+      btn.innerHTML = trashSVG() + " Delete";
+      return;
+    }
+    allRows = allRows.filter((l) => l.id !== id);
+    syncDerivedData();
+    li.style.transition = "opacity 0.18s,transform 0.18s";
+    li.style.opacity = "0";
+    li.style.transform = "translateX(6px)";
+    setTimeout(() => {
+      li.remove();
+      const rem = $("detailList").querySelectorAll("li").length;
+      $("detailCount").textContent = `${rem} event${rem !== 1 ? "s" : ""}`;
+      if (rem === 0) closeDetail();
+      renderCalendar();
+      renderStats();
+    }, 180);
+  } catch (e) {
+    alert("Network error: " + e.message);
+    btn.classList.remove("deleting");
+    btn.innerHTML = trashSVG() + " Delete";
+  }
+}
+
+function renderAll() {
+  renderMonthLabel();
+  renderStats();
+  renderCalendar();
+}
+
+function renderMonthLabel() {
+  $("monthLabel").textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+}
+
+function renderStats() {
+  const ml = allLogs.filter((l) => l._date.getFullYear() === viewYear && l._date.getMonth() === viewMonth);
+  $("stat-days").textContent = new Set(ml.map((l) => dateKey(l._date))).size;
+  $("stat-in").textContent = ml.filter((l) => l[TYPE_COL] === "IN").length;
+  $("stat-out").textContent = ml.filter((l) => l[TYPE_COL] === "OUT").length;
+
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  let leaveDays = 0;
+  let wfhDays = 0;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(viewYear, viewMonth, d);
+    if (isLeaveDay(dt)) leaveDays++;
+    if (isWfhDay(dt)) wfhDays++;
+  }
+  $("stat-leave").textContent = leaveDays;
+  $("stat-wfh").textContent = wfhDays;
+}
+
+function renderCalendar() {
+  const grid = $("calGrid");
+  grid.innerHTML = "";
+  const todayKey = dateKey(new Date());
+  const monthLogs = allLogs.filter((l) => l._date.getFullYear() === viewYear && l._date.getMonth() === viewMonth);
+  const dayMap = buildDayMap(monthLogs);
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const daysInPrev = new Date(viewYear, viewMonth, 0).getDate();
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, month, year, other = false;
+    if (i < firstDay) {
+      day = daysInPrev - firstDay + 1 + i;
+      month = viewMonth === 0 ? 11 : viewMonth - 1;
+      year = viewMonth === 0 ? viewYear - 1 : viewYear;
+      other = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - firstDay - daysInMonth + 1;
+      month = viewMonth === 11 ? 0 : viewMonth + 1;
+      year = viewMonth === 11 ? viewYear + 1 : viewYear;
+      other = true;
+    } else {
+      day = i - firstDay + 1;
+      month = viewMonth;
+      year = viewYear;
+    }
+
+    const cellDate = new Date(year, month, day);
+    const key = dateKey(cellDate);
+    const logs = other ? [] : (dayMap[key] || []);
+    const isToday = key === todayKey;
+    const dayStatus = !other ? getDayStatus(cellDate) : null;
+    const isLeave = dayStatus === "LEAVE";
+    const isWfh = dayStatus === "WFH";
+    const leaveLabel = isLeave ? getLeaveDateLabel(key) : "";
+
+    const cell = document.createElement("div");
+    cell.className = ["cal-cell", other ? "other-month" : "", isToday ? "today" : "", isLeave ? "is-leave" : "", isWfh ? "is-wfh" : "", logs.length ? "has-data" : ""].filter(Boolean).join(" ");
+
+    const dn = document.createElement("div");
+    dn.className = "day-num";
+    dn.textContent = day;
+    cell.appendChild(dn);
+
+    if (isLeave && !other) {
+      const lb = document.createElement("div");
+      lb.className = "leave-badge";
+      lb.textContent = leaveLabel || "Leave";
+      cell.appendChild(lb);
+    } else if (isWfh && !other) {
+      const wb = document.createElement("div");
+      wb.className = "wfh-badge";
+      wb.textContent = "WFH";
+      cell.appendChild(wb);
+    }
+
+    if (logs.length) {
+      const ev = document.createElement("div");
+      ev.className = "cell-events";
+      logs.slice(0, 2).forEach((l) => {
+        const isIn = l[TYPE_COL] === "IN";
+        const p = document.createElement("div");
+        p.className = "cell-pill " + (isIn ? "in" : "out");
+        p.innerHTML = `<div class="cell-pill-dot"></div><span class="pill-text">${isIn ? "In" : "Out"} ${formatTime(l._date)}</span>`;
+        ev.appendChild(p);
+      });
+      if (logs.length > 2) {
+        const m = document.createElement("div");
+        m.className = "cell-more";
+        m.textContent = `+${logs.length - 2}`;
+        ev.appendChild(m);
+      }
+      cell.appendChild(ev);
+    }
+
+    if (logs.length || (!other && (isLeave || isWfh))) {
+      cell.classList.add("has-data");
+      cell.addEventListener("click", () => {
+        if (selectedCell) selectedCell.classList.remove("selected");
+        selectedCell = cell;
+        cell.classList.add("selected");
+        showDetail(cellDate, logs);
+      });
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function showDetail(date, logs) {
+  detailCurrentDate = date;
+  const k = dateKey(date);
+  const dayStatus = getDayStatus(date);
+  $("detailDate").textContent = formatFullDate(date) + (dayStatus === "LEAVE" ? " — 🟡 Leave" : dayStatus === "WFH" ? " — 🔵 WFH" : "");
+  $("detailCount").textContent = `${logs.length} event${logs.length !== 1 ? "s" : ""}`;
+
+  const dab = $("detailAddBtn");
+  dab.onclick = async () => {
+    if (!adminUnlocked) {
+      const ok = await openPinModal();
+      if (!ok) return;
+      adminUnlocked = true;
+      updateStrip();
+    }
+    openAddModal(k);
+  };
+
+  const list = $("detailList");
+  list.innerHTML = "";
+  [...logs].sort((a, b) => a._date - b._date).forEach((log) => {
+    const isIn = log[TYPE_COL] === "IN";
+    const li = document.createElement("li");
+    li.className = "detail-item " + (isIn ? "in" : "out");
+    const btn = document.createElement("button");
+    btn.className = "delete-btn" + (adminUnlocked ? "" : " locked");
+    btn.innerHTML = trashSVG() + " Delete";
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteLog(log.id, btn, li);
+    });
+    li.innerHTML = `<div class="detail-dot"></div><div class="detail-info"><div class="detail-type">${isIn ? "Check In" : "Check Out"}</div><div class="detail-time">${formatTime(log._date)}</div></div>`;
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+
+  if (!logs.length && dayStatus) {
+    const li = document.createElement("li");
+    li.style.cssText = `padding:12px;font-size:12px;color:${dayStatus === "LEAVE" ? "var(--leave)" : "var(--wfh)"};text-align:center;`;
+    if (dayStatus === "LEAVE") {
+      const label = getLeaveDateLabel(k);
+      li.textContent = label ? `Leave: ${label}` : "Marked as leave day — no attendance records";
+    } else {
+      li.textContent = "Marked as WFH day — no attendance records";
+    }
+    list.appendChild(li);
+  }
+
+  const panel = $("detailPanel");
+  panel.classList.add("visible");
+  updateStrip();
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function closeDetail() {
+  $("detailPanel").classList.remove("visible");
+  detailCurrentDate = null;
+  if (selectedCell) {
+    selectedCell.classList.remove("selected");
+    selectedCell = null;
+  }
+}
+
+$("prevMonth").addEventListener("click", () => {
+  if (viewMonth === 0) {
+    viewMonth = 11;
+    viewYear--;
+  } else {
+    viewMonth--;
+  }
+  closeDetail();
+  renderAll();
+});
+
+$("nextMonth").addEventListener("click", () => {
+  if (viewMonth === 11) {
+    viewMonth = 0;
+    viewYear++;
+  } else {
+    viewMonth++;
+  }
+  closeDetail();
+  renderAll();
+});
+
+$("detailClose").addEventListener("click", closeDetail);
+
+loadData();
+updateStrip();
+</script>
+</body>
+</html>
