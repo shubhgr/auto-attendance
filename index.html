@@ -666,7 +666,11 @@ async function saveLeaveSettings() {
       });
 
     }
-// save weekly leave
+
+
+
+
+    // save weekly leave
 for (const wd of tempLeave.weekdays) {
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
@@ -681,19 +685,22 @@ for (const wd of tempLeave.weekdays) {
       title: "Weekly Leave",
       category: "leave",
       status: "approved",
-      task_date: "2000-01-0" + (wd+1),   // ⭐ IMPORTANT FIX
+      task_date: "2000-01-0" + (wd + 1),   // ⭐ VERY IMPORTANT
       raw_input: "weekday:" + wd
     })
   });
 
   if (!res.ok) {
     const t = await res.text();
-    alert("DB ERROR: " + t);
+    alert("DB Insert Error: " + t);
     return;
   }
 
 }
 
+
+
+    
     alert("✅ Leave Saved To Database");
 
     leaveSettings = JSON.parse(JSON.stringify(tempLeave));
