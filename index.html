@@ -666,27 +666,33 @@ async function saveLeaveSettings() {
       });
 
     }
+// save weekly leave
+for (const wd of tempLeave.weekdays) {
 
-    // save weekly leave
-    for (const wd of tempLeave.weekdays) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + SUPABASE_KEY,
+      "Content-Type": "application/json",
+      Prefer: "return=representation"
+    },
+    body: JSON.stringify({
+      title: "Weekly Leave",
+      category: "leave",
+      status: "approved",
+      task_date: "2000-01-0" + (wd+1),   // ⭐ IMPORTANT FIX
+      raw_input: "weekday:" + wd
+    })
+  });
 
-      await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
-        method: "POST",
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal"
-        },
-        body: JSON.stringify({
-          title: "Weekly Leave",
-          category: "leave",
-          status: "approved",
-          raw_input: "weekday:" + wd
-        })
-      });
+  if (!res.ok) {
+    const t = await res.text();
+    alert("DB ERROR: " + t);
+    return;
+  }
 
-    }
+}
 
     alert("✅ Leave Saved To Database");
 
