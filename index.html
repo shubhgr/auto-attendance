@@ -641,12 +641,68 @@ function addSpecificLeave() {
   renderLeaveList();
 }
 
-function saveLeaveSettings() {
-  leaveSettings = JSON.parse(JSON.stringify(tempLeave));
-  saveLeaveSettingsToStorage(leaveSettings);
-  $("leaveOverlay").classList.remove("visible");
-  tempLeave=null;
-  renderAll();
+async function saveLeaveSettings() {
+
+  try {
+
+    // save specific leave dates
+    for (const item of tempLeave.dates) {
+
+      await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({
+          title: "Leave",
+          category: "leave",
+          status: "approved",
+          task_date: item.date,
+          raw_input: item.label || ""
+        })
+      });
+
+    }
+
+    // save weekly leave
+    for (const wd of tempLeave.weekdays) {
+
+      await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({
+          title: "Weekly Leave",
+          category: "leave",
+          status: "approved",
+          raw_input: "weekday:" + wd
+        })
+      });
+
+    }
+
+    alert("✅ Leave Saved To Database");
+
+    leaveSettings = JSON.parse(JSON.stringify(tempLeave));
+
+    $("leaveOverlay").classList.remove("visible");
+    tempLeave = null;
+
+    renderAll();
+
+  } catch (e) {
+
+    alert("Error saving leave: " + e.message);
+
+  }
+
 }
 
 // ── Add Log ───────────────────────────────────────────────────────────────────
@@ -719,8 +775,12 @@ async function loadData() {
   if(!allLogs.length){showError(`No valid dates in "${TIME_COL}".`);return;}
   const latest=allLogs[0]._date;
   viewYear=latest.getFullYear(); viewMonth=latest.getMonth();
-  $("loading").style.display="none"; $("app").style.display="block";
-  renderAll();
+  $("loading").style.display="none";
+$("app").style.display="block";
+
+await loadLeaveFromDB();
+
+renderAll();
 }
 
 // ── Delete ─────────────────────────────────────────────────────────────────────
@@ -873,6 +933,48 @@ $("prevMonth").addEventListener("click",()=>{ if(viewMonth===0){viewMonth=11;vie
 $("nextMonth").addEventListener("click",()=>{ if(viewMonth===11){viewMonth=0;viewYear++;}else viewMonth++; closeDetail();renderAll(); });
 $("detailClose").addEventListener("click",closeDetail);
 
+
+  async function loadLeaveFromDB() {
+
+  try {
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/tasks?category=eq.leave`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    leaveSettings = { weekdays: [], dates: [] };
+
+    data.forEach(row => {
+
+      if (row.raw_input && row.raw_input.startsWith("weekday:")) {
+
+        leaveSettings.weekdays.push(
+          parseInt(row.raw_input.split(":")[1])
+        );
+
+      } else {
+
+        leaveSettings.dates.push({
+          date: row.task_date,
+          label: row.raw_input
+        });
+
+      }
+
+    });
+
+  } catch (e) {
+
+    console.log("Leave load error", e);
+
+  }
+
+}
 loadData();
 </script>
 </body>
