@@ -590,7 +590,7 @@ function openLeaveModal() {
   $("leaveOverlay").classList.add("visible");
 }
 
-$("leaveBtn").addEventListener("click", async () => {    // if admin not unlocked → ask PIN first   if (!adminUnlocked) {     const ok = await openPinModal();     if (!ok) return;      adminUnlocked = true;     updateStrip();   }    // now open leave modal   openLeaveModal(); });
+$("leaveBtn").addEventListener("click", openLeaveModal);
 $("leaveClose").addEventListener("click", ()=>{ $("leaveOverlay").classList.remove("visible"); tempLeave=null; });
 $("leaveOverlay").addEventListener("click",e=>{ if(e.target===$("leaveOverlay")){ $("leaveOverlay").classList.remove("visible"); tempLeave=null; } });
 
