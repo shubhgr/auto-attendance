@@ -27,6 +27,9 @@
       --leave:     #facc15;
       --leave-bg:  #1a1500;
       --leave-border: #2a2300;
+      --wfh:       #38bdf8;
+      --wfh-bg:    #071922;
+      --wfh-border:#12364a;
       --accent:    #6366f1;
       --radius:    12px;
     }
@@ -130,6 +133,7 @@
     .leave-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .leave-modal-header h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
     .leave-modal > .sub { font-size: 12px; color: var(--text3); margin-bottom: 18px; }
+    .status-note { font-size: 11px; color: var(--text3); margin-top: -4px; margin-bottom: 14px; line-height: 1.5; }
 
     .leave-section-title { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
 
@@ -164,6 +168,34 @@
 
     .leave-save-btn { width: 100%; background: var(--text); color: var(--bg); border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
     .leave-save-btn:hover { opacity: 0.88; }
+
+    .wfh-modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 16px; padding: 24px; width: 380px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6); animation: fadeUp 0.2s ease both;
+    }
+    .wfh-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .wfh-modal-header h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
+    .wfh-modal > .sub { font-size: 12px; color: var(--text3); margin-bottom: 18px; }
+    .weekday-grid.wfh .wd-btn.active { background: var(--wfh-bg); border-color: var(--wfh-border); color: var(--wfh); }
+    .wfh-date-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .wfh-date-row .form-input { flex: 1; }
+    .wfh-add-btn {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 14px; font-size: 12px; font-weight: 500; cursor: pointer;
+      color: var(--text2); font-family: inherit; white-space: nowrap; transition: all 0.15s;
+    }
+    .wfh-add-btn:hover { border-color: var(--border2); color: var(--text); }
+    .wfh-list { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; max-height: 160px; overflow-y: auto; }
+    .wfh-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--wfh-bg); border: 1px solid var(--wfh-border); border-radius: 8px; }
+    .wfh-item-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--wfh); flex-shrink: 0; }
+    .wfh-item-info { flex: 1; }
+    .wfh-item-date { font-size: 12px; font-weight: 500; color: var(--wfh); font-family: 'Geist Mono', monospace; }
+    .wfh-item-del { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: color 0.1s; line-height: 1; }
+    .wfh-item-del:hover { color: var(--out); }
+    .wfh-empty { font-size: 12px; color: var(--text3); text-align: center; padding: 14px; }
+    .wfh-save-btn { width: 100%; background: var(--text); color: var(--bg); border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+    .wfh-save-btn:hover { opacity: 0.88; }
 
     #app { max-width: 860px; margin: 0 auto; display: none; }
 
@@ -200,15 +232,20 @@
     .strip-action.leave-btn:hover { background: var(--leave-bg); color: var(--leave); }
     .admin-strip.unlocked .strip-action.leave-btn { color: #a89a30; border-color: #2a2a10; }
     .admin-strip.unlocked .strip-action.leave-btn:hover { background: #1a1a00; color: var(--leave); border-color: var(--leave-border); }
+    .strip-action.wfh-btn { border-color: var(--wfh-border); color: #4d8ea8; }
+    .strip-action.wfh-btn:hover { background: var(--wfh-bg); color: var(--wfh); }
+    .admin-strip.unlocked .strip-action.wfh-btn { color: #7fb5cb; border-color: var(--wfh-border); }
+    .admin-strip.unlocked .strip-action.wfh-btn:hover { background: var(--wfh-bg); color: var(--wfh); }
     .strip-action.hidden { display: none; }
 
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+    .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
     .stat-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
     .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-family: 'Geist Mono', monospace; }
     .stat-value.green  { color: var(--in); }
     .stat-value.red    { color: var(--out); }
     .stat-value.yellow { color: var(--leave); }
+    .stat-value.blue   { color: var(--wfh); }
 
     .cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
     .cal-head { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); }
@@ -221,12 +258,16 @@
     .cal-cell.today .day-num { background: var(--text); color: var(--bg); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
     .cal-cell.is-leave { background: var(--leave-bg); }
     .cal-cell.is-leave .day-num { color: var(--leave); }
+    .cal-cell.is-wfh { background: var(--wfh-bg); }
+    .cal-cell.is-wfh .day-num { color: var(--wfh); }
     .cal-cell.has-data { cursor: pointer; }
     .cal-cell.has-data:hover { background: var(--surface2); }
     .cal-cell.is-leave.has-data:hover { background: #1a1500; }
+    .cal-cell.is-wfh.has-data:hover { background: #0b2230; }
     .cal-cell.selected { background: var(--surface2) !important; outline: 1px solid var(--border2); outline-offset: -1px; }
 
     .leave-badge { font-size: 9px; font-weight: 500; color: var(--leave); background: rgba(250,204,21,0.08); border: 1px solid var(--leave-border); border-radius: 4px; padding: 1px 5px; display: inline-block; margin-bottom: 3px; }
+    .wfh-badge { font-size: 9px; font-weight: 500; color: var(--wfh); background: rgba(56,189,248,0.08); border: 1px solid var(--wfh-border); border-radius: 4px; padding: 1px 5px; display: inline-block; margin-bottom: 3px; }
 
     .day-num { font-size: 11px; font-weight: 500; color: var(--text2); margin-bottom: 4px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-family: 'Geist Mono', monospace; }
     .cell-events { display: flex; flex-direction: column; gap: 2px; }
@@ -346,12 +387,12 @@
 <div class="overlay" id="leaveOverlay">
   <div class="leave-modal">
     <div class="leave-modal-header">
-      <h2>Leave Days</h2>
+      <h2>Manage Leave</h2>
       <button class="modal-close" id="leaveClose">✕</button>
     </div>
-    <p class="sub">Mark recurring weekly off-days or specific dates as leave.</p>
+    <p class="sub">Set weekly off-days and one-off leave dates from a single place.</p>
 
-    <div class="leave-section-title">Weekly Off Days</div>
+    <div class="leave-section-title">Recurring Weekdays</div>
     <div class="weekday-grid" id="weekdayGrid">
       <button class="wd-btn" data-wd="0">Sun</button>
       <button class="wd-btn" data-wd="1">Mon</button>
@@ -368,9 +409,41 @@
       <input type="text" class="form-input" id="leaveLabelInput" placeholder="Label (e.g. Diwali)" />
       <button class="leave-add-btn" onclick="addSpecificLeave()">+ Add</button>
     </div>
+    <p class="status-note">Specific leave labels are stored in the database and shown back on the calendar detail view.</p>
     <ul class="leave-list" id="leaveList"></ul>
 
     <button class="leave-save-btn" onclick="saveLeaveSettings()">Save Settings</button>
+  </div>
+</div>
+
+<div class="overlay" id="wfhOverlay">
+  <div class="wfh-modal">
+    <div class="wfh-modal-header">
+      <h2>Manage WFH</h2>
+      <button class="modal-close" id="wfhClose">✕</button>
+    </div>
+    <p class="sub">Set recurring work-from-home weekdays and one-off WFH dates.</p>
+
+    <div class="leave-section-title">Recurring Weekdays</div>
+    <div class="weekday-grid wfh" id="wfhWeekdayGrid">
+      <button class="wd-btn" data-wd="0">Sun</button>
+      <button class="wd-btn" data-wd="1">Mon</button>
+      <button class="wd-btn" data-wd="2">Tue</button>
+      <button class="wd-btn" data-wd="3">Wed</button>
+      <button class="wd-btn" data-wd="4">Thu</button>
+      <button class="wd-btn" data-wd="5">Fri</button>
+      <button class="wd-btn" data-wd="6">Sat</button>
+    </div>
+
+    <div class="leave-section-title">Specific Dates</div>
+    <div class="wfh-date-row">
+      <input type="date" class="form-input" id="wfhDateInput" />
+      <button class="wfh-add-btn" onclick="addSpecificWfh()">+ Add</button>
+    </div>
+    <p class="status-note">Use recurring weekdays for fixed patterns and specific dates for exceptions.</p>
+    <ul class="wfh-list" id="wfhList"></ul>
+
+    <button class="wfh-save-btn" onclick="saveWfhSettings()">Save Settings</button>
   </div>
 </div>
 
@@ -394,6 +467,7 @@
         <div class="legend-item"><div class="legend-dot" style="background:var(--in)"></div>In</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--out)"></div>Out</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--leave)"></div>Leave</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--wfh)"></div>WFH</div>
       </div>
       <div class="month-nav">
         <button id="prevMonth">&#8249;</button>
@@ -407,7 +481,8 @@
     <div class="strip-dot"></div>
     <span class="strip-label" id="stripLabel">🔒 Locked — unlock to add or delete records</span>
     <div class="strip-actions">
-      <button class="strip-action leave-btn" id="leaveBtn">📅 Leaves</button>
+      <button class="strip-action leave-btn" id="leaveBtn">📅 Manage Leave</button>
+      <button class="strip-action wfh-btn" id="wfhBtn">🏠 Manage WFH</button>
       <button class="strip-action" id="stripBtn">Unlock</button>
     </div>
   </div>
@@ -417,6 +492,7 @@
     <div class="stat-card"><div class="stat-label">Check-ins</div><div class="stat-value green" id="stat-in">—</div></div>
     <div class="stat-card"><div class="stat-label">Check-outs</div><div class="stat-value red" id="stat-out">—</div></div>
     <div class="stat-card"><div class="stat-label">Leave Days</div><div class="stat-value yellow" id="stat-leave">—</div></div>
+    <div class="stat-card"><div class="stat-label">WFH Days</div><div class="stat-value blue" id="stat-wfh">—</div></div>
   </div>
 
   <div class="cal-card fade-in">
@@ -451,30 +527,23 @@
 const SUPABASE_URL = "https://kpansofmofolnnfnwlml.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYW5zb2Ztb2ZvbG5uZm53bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzU3ODksImV4cCI6MjA4ODExMTc4OX0.v_TSJONVfpvxuGQnK6O2S9ZXEpRNdfeOvXELeN_yYW0";
 const TABLE = "office_logs";
+const SETTINGS_TABLE = "office_day_settings";
 const TIME_COL = "event_time";
 const TYPE_COL = "event_type";
+const LABEL_COL = "event_label";
 const ADMIN_PIN = "2281";
 
-function loadLeaveSettings() {
-  try {
-    const s = localStorage.getItem("attendance_leave_settings");
-    if (s) {
-      const parsed = JSON.parse(s);
-      return { weekdays: Array.isArray(parsed.weekdays) ? parsed.weekdays : [] };
-    }
-  } catch (e) {}
-  return { weekdays: [] };
-}
-
-function saveLeaveSettingsToStorage(settings) {
-  localStorage.setItem("attendance_leave_settings", JSON.stringify({ weekdays: settings.weekdays }));
-}
-
-let leaveSettings = loadLeaveSettings();
+let leaveSettings = { weekdays: [] };
 let leaveRecords = [];
+let wfhSettings = { weekdays: [] };
+let wfhRecords = [];
 
 function getSpecificLeaveRecord(dateStr) {
   return leaveRecords.find((item) => item.date === dateStr) || null;
+}
+
+function getSpecificWfhRecord(dateStr) {
+  return wfhRecords.find((item) => item.date === dateStr) || null;
 }
 
 function isLeaveDay(dateObj) {
@@ -483,9 +552,42 @@ function isLeaveDay(dateObj) {
   return !!getSpecificLeaveRecord(dateKey(dateObj));
 }
 
+function isWfhDay(dateObj) {
+  const wd = dateObj.getDay();
+  if (wfhSettings.weekdays.includes(wd)) return true;
+  return !!getSpecificWfhRecord(dateKey(dateObj));
+}
+
 function getLeaveDateLabel(dateStr) {
   const found = getSpecificLeaveRecord(dateStr);
   return found ? found.label : "";
+}
+
+function getDayStatus(dateObj) {
+  if (isLeaveDay(dateObj)) return "LEAVE";
+  if (isWfhDay(dateObj)) return "WFH";
+  return null;
+}
+
+function authHeaders(extra = {}) {
+  return {
+    apikey: SUPABASE_KEY,
+    Authorization: "Bearer " + SUPABASE_KEY,
+    ...extra
+  };
+}
+
+async function requestJson(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: authHeaders(options.headers || {})
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`HTTP ${res.status}${body ? ` — ${body.slice(0, 200)}` : ""}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
 }
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -597,7 +699,7 @@ $("pinKeypad").addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  if ($("addOverlay").classList.contains("visible") || $("leaveOverlay").classList.contains("visible")) return;
+  if ($("addOverlay").classList.contains("visible") || $("leaveOverlay").classList.contains("visible") || $("wfhOverlay").classList.contains("visible")) return;
   if (!$("pinOverlay").classList.contains("visible")) return;
   if (e.key >= "0" && e.key <= "9") {
     if (pinBuffer.length < 4) {
@@ -624,16 +726,19 @@ $("pinOverlay").addEventListener("click", (e) => {
 function updateStrip() {
   const strip = $("adminStrip"), label = $("stripLabel"), btn = $("stripBtn");
   const leaveBtn = $("leaveBtn");
+  const wfhBtn = $("wfhBtn");
   if (adminUnlocked) {
     strip.classList.add("unlocked");
     label.textContent = "🔓 Admin mode — add & delete records unlocked";
     btn.textContent = "Lock";
     leaveBtn.classList.remove("hidden");
+    wfhBtn.classList.remove("hidden");
   } else {
     strip.classList.remove("unlocked");
     label.textContent = "🔒 Locked — unlock to add or delete records";
     btn.textContent = "Unlock";
     leaveBtn.classList.add("hidden");
+    wfhBtn.classList.add("hidden");
   }
   document.querySelectorAll(".delete-btn").forEach((b) => {
     if (adminUnlocked) b.classList.remove("locked");
@@ -660,6 +765,7 @@ $("stripBtn").addEventListener("click", async () => {
 });
 
 let tempLeave = null;
+let tempWfh = null;
 
 function openLeaveModal() {
   tempLeave = {
@@ -685,8 +791,31 @@ $("leaveOverlay").addEventListener("click", (e) => {
   }
 });
 
+function openWfhModal() {
+  tempWfh = {
+    weekdays: [...wfhSettings.weekdays],
+    dates: wfhRecords.map((item) => ({ id: item.id, date: item.date }))
+  };
+  renderWfhWeekdayGrid();
+  renderWfhList();
+  $("wfhDateInput").value = "";
+  $("wfhOverlay").classList.add("visible");
+}
+
+$("wfhBtn").addEventListener("click", openWfhModal);
+$("wfhClose").addEventListener("click", () => {
+  $("wfhOverlay").classList.remove("visible");
+  tempWfh = null;
+});
+$("wfhOverlay").addEventListener("click", (e) => {
+  if (e.target === $("wfhOverlay")) {
+    $("wfhOverlay").classList.remove("visible");
+    tempWfh = null;
+  }
+});
+
 function renderWeekdayGrid() {
-  document.querySelectorAll(".wd-btn").forEach((btn) => {
+  document.querySelectorAll("#weekdayGrid .wd-btn").forEach((btn) => {
     const wd = parseInt(btn.dataset.wd, 10);
     btn.classList.toggle("active", tempLeave.weekdays.includes(wd));
     btn.onclick = () => {
@@ -719,6 +848,40 @@ function renderLeaveList() {
   });
 }
 
+function renderWfhWeekdayGrid() {
+  document.querySelectorAll("#wfhWeekdayGrid .wd-btn").forEach((btn) => {
+    const wd = parseInt(btn.dataset.wd, 10);
+    btn.classList.toggle("active", tempWfh.weekdays.includes(wd));
+    btn.onclick = () => {
+      const idx = tempWfh.weekdays.indexOf(wd);
+      if (idx >= 0) tempWfh.weekdays.splice(idx, 1);
+      else tempWfh.weekdays.push(wd);
+      renderWfhWeekdayGrid();
+    };
+  });
+}
+
+function renderWfhList() {
+  const list = $("wfhList");
+  list.innerHTML = "";
+  if (!tempWfh.dates.length) {
+    list.innerHTML = '<div class="wfh-empty">No specific WFH dates added</div>';
+    return;
+  }
+  tempWfh.dates.sort((a, b) => a.date.localeCompare(b.date)).forEach((item, idx) => {
+    const li = document.createElement("li");
+    li.className = "wfh-item";
+    li.innerHTML = `<div class="wfh-item-dot"></div><div class="wfh-item-info"><div class="wfh-item-date">${item.date}</div></div><button class="wfh-item-del" data-idx="${idx}">×</button>`;
+    list.appendChild(li);
+  });
+  list.querySelectorAll(".wfh-item-del").forEach((btn) => {
+    btn.onclick = () => {
+      tempWfh.dates.splice(parseInt(btn.dataset.idx, 10), 1);
+      renderWfhList();
+    };
+  });
+}
+
 function addSpecificLeave() {
   const dateVal = $("leaveDateInput").value;
   const labelVal = $("leaveLabelInput").value.trim();
@@ -736,51 +899,82 @@ function addSpecificLeave() {
   renderLeaveList();
 }
 
+function addSpecificWfh() {
+  const dateVal = $("wfhDateInput").value;
+  if (!dateVal) {
+    alert("Please pick a date.");
+    return;
+  }
+  if (tempWfh.dates.some((d) => d.date === dateVal)) {
+    alert("This date is already added.");
+    return;
+  }
+  tempWfh.dates.push({ date: dateVal });
+  $("wfhDateInput").value = "";
+  renderWfhList();
+}
+
 async function saveLeaveSettings() {
   const nextWeekdays = [...tempLeave.weekdays].sort((a, b) => a - b);
   const nextDates = [...tempLeave.dates].sort((a, b) => a.date.localeCompare(b.date));
   const existingByDate = new Map(leaveRecords.map((item) => [item.date, item]));
   const nextDateKeys = new Set(nextDates.map((item) => item.date));
   const toInsert = nextDates.filter((item) => !existingByDate.has(item.date));
+  const toUpdate = nextDates.filter((item) => {
+    const existing = existingByDate.get(item.date);
+    return existing && (existing.label || "") !== (item.label || "");
+  });
   const toDelete = leaveRecords.filter((item) => !nextDateKeys.has(item.date));
 
   try {
+    await syncWeekdaySettings("LEAVE_WEEKDAY", nextWeekdays, leaveSettings.weekdays);
+
     for (const item of toInsert) {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+      const inserted = await requestJson(`${TABLE}`, {
         method: "POST",
         headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: "Bearer " + SUPABASE_KEY,
           "Content-Type": "application/json",
           Prefer: "return=representation"
         },
         body: JSON.stringify({
           event_type: "LEAVE",
-          event_time: item.date + "T00:00:00"
+          event_time: item.date + "T00:00:00",
+          [LABEL_COL]: item.label || null
         })
       });
-      if (!res.ok) throw new Error(`Insert failed: ${res.status}`);
-      const inserted = await res.json();
       if (inserted && inserted[0]) {
         allRows.push({ ...inserted[0], _date: new Date(inserted[0][TIME_COL]) });
       }
     }
 
+    for (const item of toUpdate) {
+      const existing = existingByDate.get(item.date);
+      const updated = await requestJson(`${TABLE}?id=eq.${existing.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          [LABEL_COL]: item.label || null
+        })
+      });
+      if (updated && updated[0]) {
+        allRows = allRows.map((row) => row.id === existing.id ? { ...updated[0], _date: new Date(updated[0][TIME_COL]) } : row);
+      }
+    }
+
     for (const item of toDelete) {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${item.id}`, {
+      await requestJson(`${TABLE}?id=eq.${item.id}`, {
         method: "DELETE",
         headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: "Bearer " + SUPABASE_KEY,
           Prefer: "return=minimal"
         }
       });
-      if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
       allRows = allRows.filter((row) => row.id !== item.id);
     }
 
     leaveSettings = { weekdays: nextWeekdays };
-    saveLeaveSettingsToStorage(leaveSettings);
     syncDerivedData();
 
     $("leaveOverlay").classList.remove("visible");
@@ -794,6 +988,61 @@ async function saveLeaveSettings() {
     }
   } catch (e) {
     alert("Could not save leave settings: " + e.message);
+  }
+}
+
+async function saveWfhSettings() {
+  const nextWeekdays = [...tempWfh.weekdays].sort((a, b) => a - b);
+  const nextDates = [...tempWfh.dates].sort((a, b) => a.date.localeCompare(b.date));
+  const existingByDate = new Map(wfhRecords.map((item) => [item.date, item]));
+  const nextDateKeys = new Set(nextDates.map((item) => item.date));
+  const toInsert = nextDates.filter((item) => !existingByDate.has(item.date));
+  const toDelete = wfhRecords.filter((item) => !nextDateKeys.has(item.date));
+
+  try {
+    await syncWeekdaySettings("WFH_WEEKDAY", nextWeekdays, wfhSettings.weekdays);
+
+    for (const item of toInsert) {
+      const inserted = await requestJson(`${TABLE}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          event_type: "WFH",
+          event_time: item.date + "T00:00:00"
+        })
+      });
+      if (inserted && inserted[0]) {
+        allRows.push({ ...inserted[0], _date: new Date(inserted[0][TIME_COL]) });
+      }
+    }
+
+    for (const item of toDelete) {
+      await requestJson(`${TABLE}?id=eq.${item.id}`, {
+        method: "DELETE",
+        headers: {
+          Prefer: "return=minimal"
+        }
+      });
+      allRows = allRows.filter((row) => row.id !== item.id);
+    }
+
+    wfhSettings = { weekdays: nextWeekdays };
+    syncDerivedData();
+
+    $("wfhOverlay").classList.remove("visible");
+    tempWfh = null;
+    renderAll();
+
+    if (detailCurrentDate) {
+      const detailKey = dateKey(detailCurrentDate);
+      const dayLogs = allLogs.filter((l) => dateKey(l._date) === detailKey);
+      showDetail(detailCurrentDate, dayLogs);
+    }
+  } catch (e) {
+    alert("Could not save WFH settings: " + e.message);
   }
 }
 
@@ -890,57 +1139,84 @@ async function loadData() {
   $("app").style.display = "none";
   $("emptyState").style.display = "none";
   $("loading").style.display = "flex";
-  let res;
   try {
-    res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?order=${TIME_COL}.desc&limit=5000`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
-    });
-  } catch (e) {
-    showError("Network error — cannot reach Supabase.", e.message);
-    return;
-  }
-  if (!res.ok) {
-    const b = await res.text().catch(() => "");
-    showError(`HTTP ${res.status} — check RLS settings.`, b.slice(0, 300));
-    return;
-  }
-  const data = await res.json().catch((e) => {
-    showError("Parse error.", e.message);
-    return null;
-  });
-  if (!data || !Array.isArray(data)) return;
-  if (!data.length) {
+    const [logData, settingsData] = await Promise.all([
+      requestJson(`${TABLE}?order=${TIME_COL}.desc&limit=5000`),
+      requestJson(`${SETTINGS_TABLE}?order=weekday.asc`)
+    ]);
+
+    allRows = (logData || []).map((l) => ({ ...l, _date: new Date(l[TIME_COL]) })).filter((l) => !isNaN(l._date));
+    const leaveWeekdays = (settingsData || []).filter((row) => row.setting_type === "LEAVE_WEEKDAY").map((row) => row.weekday);
+    const wfhWeekdays = (settingsData || []).filter((row) => row.setting_type === "WFH_WEEKDAY").map((row) => row.weekday);
+    leaveSettings = { weekdays: leaveWeekdays };
+    wfhSettings = { weekdays: wfhWeekdays };
+    syncDerivedData();
+
+    const latest = allRows[0]?._date || new Date();
+    viewYear = latest.getFullYear();
+    viewMonth = latest.getMonth();
     $("loading").style.display = "none";
-    $("emptyState").style.display = "block";
+    $("app").style.display = "block";
+    renderAll();
+  } catch (e) {
+    showError("Could not load attendance configuration from Supabase.", e.message);
     return;
   }
-  allRows = data.map((l) => ({ ...l, _date: new Date(l[TIME_COL]) })).filter((l) => !isNaN(l._date));
-  syncDerivedData();
-  if (!allRows.length) {
-    showError(`No valid dates in "${TIME_COL}".`);
-    return;
-  }
-  const latest = allRows[0]._date;
-  viewYear = latest.getFullYear();
-  viewMonth = latest.getMonth();
-  $("loading").style.display = "none";
-  $("app").style.display = "block";
-  renderAll();
 }
 
 function syncDerivedData() {
   allRows.sort((a, b) => b._date - a._date);
-  allLogs = allRows.filter((row) => row[TYPE_COL] !== "LEAVE");
+  allLogs = allRows.filter((row) => row[TYPE_COL] !== "LEAVE" && row[TYPE_COL] !== "WFH");
   const leaveMap = new Map();
   allRows
     .filter((row) => row[TYPE_COL] === "LEAVE")
     .forEach((row) => {
       const date = row._date.toISOString().slice(0, 10);
       if (!leaveMap.has(date)) {
-        leaveMap.set(date, { id: row.id, date, label: "" });
+        leaveMap.set(date, { id: row.id, date, label: row[LABEL_COL] || "" });
       }
     });
   leaveRecords = [...leaveMap.values()].sort((a, b) => a.date.localeCompare(b.date));
+  const wfhMap = new Map();
+  allRows
+    .filter((row) => row[TYPE_COL] === "WFH")
+    .forEach((row) => {
+      const date = row._date.toISOString().slice(0, 10);
+      if (!wfhMap.has(date)) {
+        wfhMap.set(date, { id: row.id, date });
+      }
+    });
+  wfhRecords = [...wfhMap.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+async function syncWeekdaySettings(settingType, nextWeekdays, currentWeekdays) {
+  const currentSet = new Set(currentWeekdays);
+  const nextSet = new Set(nextWeekdays);
+  const toInsert = nextWeekdays.filter((weekday) => !currentSet.has(weekday));
+  const toDelete = currentWeekdays.filter((weekday) => !nextSet.has(weekday));
+
+  for (const weekday of toInsert) {
+    await requestJson(`${SETTINGS_TABLE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
+      },
+      body: JSON.stringify({
+        setting_type: settingType,
+        weekday
+      })
+    });
+  }
+
+  for (const weekday of toDelete) {
+    await requestJson(`${SETTINGS_TABLE}?setting_type=eq.${settingType}&weekday=eq.${weekday}`, {
+      method: "DELETE",
+      headers: {
+        Prefer: "return=minimal"
+      }
+    });
+  }
 }
 
 function trashSVG() {
@@ -1023,11 +1299,14 @@ function renderStats() {
 
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   let leaveDays = 0;
+  let wfhDays = 0;
   for (let d = 1; d <= daysInMonth; d++) {
     const dt = new Date(viewYear, viewMonth, d);
     if (isLeaveDay(dt)) leaveDays++;
+    if (isWfhDay(dt)) wfhDays++;
   }
   $("stat-leave").textContent = leaveDays;
+  $("stat-wfh").textContent = wfhDays;
 }
 
 function renderCalendar() {
@@ -1063,11 +1342,13 @@ function renderCalendar() {
     const key = dateKey(cellDate);
     const logs = other ? [] : (dayMap[key] || []);
     const isToday = key === todayKey;
-    const isLeave = !other && isLeaveDay(cellDate);
+    const dayStatus = !other ? getDayStatus(cellDate) : null;
+    const isLeave = dayStatus === "LEAVE";
+    const isWfh = dayStatus === "WFH";
     const leaveLabel = isLeave ? getLeaveDateLabel(key) : "";
 
     const cell = document.createElement("div");
-    cell.className = ["cal-cell", other ? "other-month" : "", isToday ? "today" : "", isLeave && !other ? "is-leave" : "", logs.length ? "has-data" : ""].filter(Boolean).join(" ");
+    cell.className = ["cal-cell", other ? "other-month" : "", isToday ? "today" : "", isLeave ? "is-leave" : "", isWfh ? "is-wfh" : "", logs.length ? "has-data" : ""].filter(Boolean).join(" ");
 
     const dn = document.createElement("div");
     dn.className = "day-num";
@@ -1079,6 +1360,11 @@ function renderCalendar() {
       lb.className = "leave-badge";
       lb.textContent = leaveLabel || "Leave";
       cell.appendChild(lb);
+    } else if (isWfh && !other) {
+      const wb = document.createElement("div");
+      wb.className = "wfh-badge";
+      wb.textContent = "WFH";
+      cell.appendChild(wb);
     }
 
     if (logs.length) {
@@ -1100,7 +1386,7 @@ function renderCalendar() {
       cell.appendChild(ev);
     }
 
-    if (logs.length || (!other && isLeave)) {
+    if (logs.length || (!other && (isLeave || isWfh))) {
       cell.classList.add("has-data");
       cell.addEventListener("click", () => {
         if (selectedCell) selectedCell.classList.remove("selected");
@@ -1116,8 +1402,8 @@ function renderCalendar() {
 function showDetail(date, logs) {
   detailCurrentDate = date;
   const k = dateKey(date);
-  const isLeave = isLeaveDay(date);
-  $("detailDate").textContent = formatFullDate(date) + (isLeave ? " — 🟡 Leave" : "");
+  const dayStatus = getDayStatus(date);
+  $("detailDate").textContent = formatFullDate(date) + (dayStatus === "LEAVE" ? " — 🟡 Leave" : dayStatus === "WFH" ? " — 🔵 WFH" : "");
   $("detailCount").textContent = `${logs.length} event${logs.length !== 1 ? "s" : ""}`;
 
   const dab = $("detailAddBtn");
@@ -1149,11 +1435,15 @@ function showDetail(date, logs) {
     list.appendChild(li);
   });
 
-  if (!logs.length && isLeave) {
+  if (!logs.length && dayStatus) {
     const li = document.createElement("li");
-    li.style.cssText = "padding:12px;font-size:12px;color:var(--leave);text-align:center;";
-    const label = getLeaveDateLabel(k);
-    li.textContent = label ? `Leave: ${label}` : "Marked as leave day — no attendance records";
+    li.style.cssText = `padding:12px;font-size:12px;color:${dayStatus === "LEAVE" ? "var(--leave)" : "var(--wfh)"};text-align:center;`;
+    if (dayStatus === "LEAVE") {
+      const label = getLeaveDateLabel(k);
+      li.textContent = label ? `Leave: ${label}` : "Marked as leave day — no attendance records";
+    } else {
+      li.textContent = "Marked as WFH day — no attendance records";
+    }
     list.appendChild(li);
   }
 
